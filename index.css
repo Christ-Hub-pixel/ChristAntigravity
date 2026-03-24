@@ -265,6 +265,27 @@ input {
   font-size: 0.875rem;
 }
 
+@media (max-width: 767px) {
+  #app-topbar {
+    padding: 10px 8px;
+    gap: 4px;
+    justify-content: space-between;
+  }
+  .topbar-stats {
+    gap: 4px;
+    font-size: 0.8rem;
+  }
+  .stat-pill {
+    padding: 4px 6px;
+    gap: 4px;
+    border-color: transparent;
+    background: transparent;
+  }
+  #app-topbar .logo span {
+    display: none;
+  }
+}
+
 .stat-pill {
   display: flex;
   align-items: center;
@@ -333,6 +354,7 @@ input {
 
 @media (min-width: 768px) {
   #app-nav {
+    order: -1;
     position: sticky;
     top: 0;
     left: 0;
@@ -348,13 +370,19 @@ input {
   }
 
   .sidebar-top-section {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
     width: 100%;
     padding: 0 10px 20px 10px;
     border-bottom: 1px solid var(--border);
     margin-bottom: 10px;
+  }
+
+  .sidebar-top-section .stat-pill {
+    justify-content: center;
+    padding: 6px;
+    font-size: 0.85rem;
   }
 
   .sidebar-toggles {
