@@ -151,15 +151,21 @@ function renderPathSVG() {
 function updateTopbar() {
   const st = AppState.streakDays;
   const xp = AppState.totalXP;
-  const elStreak = document.getElementById('topbar-streak');
-  const elXP = document.getElementById('topbar-xp');
-  const sideStreak = document.getElementById('sidebar-streak');
-  const sideXP = document.getElementById('sidebar-xp');
+  const hearts = AppState.hearts;
+  const gems = AppState.gems;
   
-  if (elStreak) elStreak.textContent = `${st}`;
-  if (elXP) elXP.textContent = `${xp.toLocaleString()}`;
-  if (sideStreak) sideStreak.textContent = `${st}`;
-  if (sideXP) sideXP.textContent = `${xp.toLocaleString()}`;
+  const ids = ['topbar-streak', 'topbar-xp', 'topbar-hearts', 'topbar-gems', 
+               'sidebar-streak', 'sidebar-xp', 'sidebar-hearts', 'sidebar-gems'];
+  
+  ids.forEach(id => {
+    const el = document.getElementById(id);
+    if (el) {
+      if (id.includes('streak')) el.textContent = `${st}`;
+      if (id.includes('xp')) el.textContent = `${xp.toLocaleString()}`;
+      if (id.includes('hearts')) el.textContent = `${hearts}`;
+      if (id.includes('gems')) el.textContent = `${gems.toLocaleString()}`;
+    }
+  });
 }
 
 window.renderHome = renderHome;

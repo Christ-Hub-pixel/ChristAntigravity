@@ -13,6 +13,11 @@ let lessonState = {
 };
 
 function startLesson(courseId, lessonId) {
+  if (AppState.hearts <= 0) {
+    showOutOfHeartsModal();
+    return;
+  }
+
   const course = COURSES[courseId];
   const lesson = course?.units.flatMap(u => u.lessons).find(l => l.id === lessonId);
   if (!lesson) return;
@@ -52,7 +57,10 @@ function renderExercise() {
           <div class="progress-bar-fill" id="ex-progress" style="width:${progress}%;transition:width 0.5s ease;"></div>
         </div>
       </div>
-      <div class="exercise-xp-badge">⚡ ${lesson.xpReward} XP</div>
+      <div style="display:flex;gap:8px;">
+        <div class="exercise-xp-badge" style="color:#ef4444;border-color:rgba(239,68,68,0.3);background:rgba(239,68,68,0.1)">❤️ <span id="lesson-hearts">${AppState.hearts}</span></div>
+        <div class="exercise-xp-badge">⚡ ${lesson.xpReward} XP</div>
+      </div>
     </div>
 
     <!-- Question Card -->
@@ -214,6 +222,13 @@ function selectOption(idx) {
 
   if (!isCorrect) {
     lessonState.mistakes++;
+    if (AppState.hearts > 0) {
+      AppState.hearts--;
+      saveState();
+      updateTopbar();
+      const lh = document.getElementById('lesson-hearts');
+      if (lh) lh.textContent = AppState.hearts;
+    }
     SoundManager.play('wrong');
   } else {
     SoundManager.play('correct');
@@ -242,6 +257,13 @@ function submitFill() {
 
   if (!isCorrect) {
     lessonState.mistakes++;
+    if (AppState.hearts > 0) {
+      AppState.hearts--;
+      saveState();
+      updateTopbar();
+      const lh = document.getElementById('lesson-hearts');
+      if (lh) lh.textContent = AppState.hearts;
+    }
     SoundManager.play('wrong');
   } else {
     SoundManager.play('correct');
@@ -262,6 +284,8 @@ function showFeedback(isCorrect, explanation, extra = null) {
   const react = isCorrect ? correctReactions[Math.floor(Math.random() * correctReactions.length)] :
                            wrongReactions[Math.floor(Math.random() * wrongReactions.length)];
 
+  const isOutOfHearts = AppState.hearts <= 0;
+
   document.getElementById('feedback-area').innerHTML = `
     <div class="feedback-sheet ${isCorrect ? 'correct' : 'wrong'}">
       <div class="feedback-sheet-content">
@@ -271,8 +295,8 @@ function showFeedback(isCorrect, explanation, extra = null) {
           <div class="feedback-desc">${extra ? extra + '<br>' : ''}${escHtml(explanation)}</div>
         </div>
       </div>
-      <button class="btn btn-primary btn-full shadow-none" onclick="nextExercise()">
-        ${isLast ? t('finish_btn') : t('continue_btn')}
+      <button class="btn btn-primary btn-full shadow-none" onclick="${isOutOfHearts ? 'showOutOfHeartsModal()' : 'nextExercise()'}">
+        ${isOutOfHearts ? '💔 Plus de vies' : isLast ? t('finish_btn') : t('continue_btn')}
       </button>
     </div>
   `;
@@ -317,6 +341,10 @@ function showLessonComplete() {
       <div class="xp-earned-premium">
         <span class="xp-icon">⚡</span>
         <span class="xp-val">+${lesson.xpReward} XP</span>
+      </div>
+      <div class="xp-earned-premium" style="background:rgba(59, 130, 246, 0.1);color:#3b82f6;border-color:rgba(59, 130, 246, 0.2);margin-top:8px;">
+        <span class="xp-icon">💎</span>
+        <span class="xp-val">+${isPerfect ? 20 : 10} Gemmes</span>
       </div>
 
       ${result.leveledUp ? `
@@ -376,6 +404,42 @@ function showXPPopup(text) {
   setTimeout(() => popup.remove(), 1600);
 }
 
+function showOutOfHeartsModal() {
+  const main = document.getElementById('app-main');
+  main.innerHTML = `
+    <div class="lesson-complete" style="text-align:center;">
+      <div style="font-size: 4rem; margin-bottom: 20px;">💔</div>
+      <h2 style="margin-bottom:10px;">Plus de Vies !</h2>
+      <p style="color:var(--text-secondary); margin-bottom: 30px;">
+        Vous n'avez plus de cœurs. Attendez qu'ils se rechargent ou achetez une recharge pour 100 Gemmes.
+      </p>
+      <button class="btn btn-primary btn-full btn-lg mb-10" onclick="buyHeartRefill()" style="margin-bottom:12px;">
+        Recharger (100 💎)
+      </button>
+      <button class="btn btn-secondary btn-full btn-lg" onclick="quitLesson()">
+        Quitter la leçon
+      </button>
+    </div>
+  `;
+}
+
+function buyHeartRefill() {
+  if (AppState.gems >= 100) {
+    AppState.gems -= 100;
+    AppState.hearts = AppState.maxHearts;
+    AppState.lastHeartRefill = Date.now();
+    saveState();
+    updateTopbar();
+    if (lessonState.lesson) {
+      renderExercise(); // Resume where they left off
+    } else {
+      quitLesson();
+    }
+  } else {
+    alert("Vous n'avez pas assez de gemmes !");
+  }
+}
+
 function triggerConfetti() {
   const colors = ['#00e676', '#a855f7', '#fbbf24', '#3b82f6', '#ef4444', '#ec4899'];
   for (let i = 0; i < 60; i++) {
@@ -406,3 +470,5 @@ window.submitFill = submitFill;
 window.nextExercise = nextExercise;
 window.quitLesson = quitLesson;
 window.triggerConfetti = triggerConfetti;
+window.showOutOfHeartsModal = showOutOfHeartsModal;
+window.buyHeartRefill = buyHeartRefill;

@@ -15,6 +15,10 @@ const DEFAULT_STATE = {
   earnedBadges: [],
   currentCourse: null,
   joinDate: new Date().toISOString(),
+  hearts: 5,
+  maxHearts: 5,
+  lastHeartRefill: Date.now(),
+  gems: 500,
   _sig: '', // Integrity signature
 };
 
@@ -41,7 +45,7 @@ window.escHtml = escHtml;
  */
 const _SECRET = 'lingo_expert_2024_auth';
 function calculateSignature(state) {
-  const data = `${state.username}:${state.totalXP}:${state.streakDays}:${state.lessonsCompleted}:${_SECRET}`;
+  const data = `${state.username}:${state.totalXP}:${state.streakDays}:${state.lessonsCompleted}:${state.hearts || 5}:${state.gems || 0}:${_SECRET}`;
   // Simple obfuscated hash function
   let hash = 0;
   for (let i = 0; i < data.length; i++) {
@@ -79,7 +83,15 @@ function loadState() {
       if (parsed.lessonsCompleted > 0 || parsed.streakDays > 1) {
          AppState.isLoggedIn = true;
       }
+      
+      // Ensure new properties exist for older saves
+      if (AppState.hearts === undefined) AppState.hearts = 5;
+      if (AppState.maxHearts === undefined) AppState.maxHearts = 5;
+      if (AppState.gems === undefined) AppState.gems = 500;
+      if (!AppState.lastHeartRefill) AppState.lastHeartRefill = Date.now();
+
       updateStreak();
+      checkHearts();
     } else {
       AppState = { ...DEFAULT_STATE };
       saveState();
@@ -113,6 +125,23 @@ function updateStreak() {
   }
   AppState.lastActiveDate = today;
   saveState();
+}
+
+function checkHearts() {
+  if (AppState.hearts < AppState.maxHearts) {
+    const now = Date.now();
+    const msPerHeart = 4 * 60 * 60 * 1000; // 4 hours per heart
+    const elapsed = now - (AppState.lastHeartRefill || now);
+    const heartsGained = Math.floor(elapsed / msPerHeart);
+    
+    if (heartsGained > 0) {
+      AppState.hearts = Math.min(AppState.maxHearts, AppState.hearts + heartsGained);
+      AppState.lastHeartRefill = now - (elapsed % msPerHeart);
+      saveState();
+    }
+  } else {
+    AppState.lastHeartRefill = Date.now();
+  }
 }
 
 function addXP(amount) {
