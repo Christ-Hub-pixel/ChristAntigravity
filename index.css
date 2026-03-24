@@ -1177,7 +1177,178 @@ input {
   cursor: pointer;
 }
 
-/* ── Home Page ────────────────────────────────────────────── */
+/* ── Duolingo Home Layout ─────────────────────────────────── */
+.duo-home-layout {
+  display: flex;
+  gap: 32px;
+  align-items: flex-start;
+  width: 100%;
+}
+
+/* Center column: learning path */
+.duo-path-col {
+  flex: 1;
+  min-width: 0;
+  max-width: 500px;
+}
+
+/* Right column: stats panel (desktop only) */
+.duo-stats-panel {
+  width: 260px;
+  flex-shrink: 0;
+  display: none;
+  flex-direction: column;
+  gap: 14px;
+  position: sticky;
+  top: 24px;
+}
+
+@media (min-width: 1060px) {
+  .duo-stats-panel {
+    display: flex;
+  }
+}
+
+/* Widget Card */
+.duo-widget {
+  background: var(--bg-card);
+  border: 2px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 16px 18px;
+  cursor: default;
+  transition: var(--transition);
+}
+
+.duo-widget-daily {
+  cursor: pointer;
+}
+
+.duo-widget-daily:hover {
+  border-color: var(--accent-orange);
+  transform: translateY(-2px);
+}
+
+.duo-widget-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.duo-widget-icon {
+  font-size: 1.2rem;
+}
+
+.duo-widget-title {
+  font-weight: 800;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-muted);
+}
+
+.duo-widget-value {
+  font-size: 2rem;
+  font-weight: 900;
+  color: var(--text-primary);
+  line-height: 1;
+  margin-bottom: 4px;
+}
+
+.duo-widget-sub {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  font-weight: 600;
+}
+
+/* XP Level bar inside widget */
+.duo-level-bar-track {
+  height: 10px;
+  background: var(--bg-secondary);
+  border-radius: var(--radius-full);
+  margin-bottom: 6px;
+  overflow: hidden;
+  border: 2px solid var(--border);
+}
+
+.duo-level-bar-fill {
+  height: 100%;
+  background: var(--accent-yellow);
+  border-radius: var(--radius-full);
+  transition: width 0.6s ease;
+}
+
+/* Hearts row */
+.duo-hearts-row {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 6px;
+  font-size: 1.2rem;
+}
+
+.duo-heart.empty {
+  opacity: 0.2;
+  filter: grayscale(1);
+}
+
+/* Daily bonus XP badge */
+.duo-daily-xp {
+  display: inline-block;
+  margin-top: 8px;
+  background: rgba(255, 150, 0, 0.15);
+  color: var(--accent-orange);
+  font-weight: 900;
+  font-size: 0.9rem;
+  padding: 4px 14px;
+  border-radius: var(--radius-full);
+  border: 2px solid rgba(255, 150, 0, 0.3);
+}
+
+/* Unit header progress bar */
+.path-unit-progress-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.path-unit-progress-bar {
+  flex: 1;
+  height: 8px;
+  background: rgba(255,255,255,0.25);
+  border-radius: var(--radius-full);
+  overflow: hidden;
+}
+
+.path-unit-progress-fill {
+  height: 100%;
+  background: #fff;
+  border-radius: var(--radius-full);
+  transition: width 0.6s ease;
+}
+
+.path-unit-progress-label {
+  font-size: 0.78rem;
+  font-weight: 800;
+  opacity: 0.85;
+  white-space: nowrap;
+}
+
+/* Path node label (lesson name below node) */
+.path-node-label {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--text-muted);
+  text-align: center;
+  margin-top: 6px;
+  max-width: 80px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ── Home Page (legacy, kept for compatibility) ───────────── */
+
 .hero-card {
   background: linear-gradient(135deg, rgba(102, 126, 234, 0.2) 0%, rgba(118, 75, 162, 0.2) 100%);
   border: 1px solid rgba(102, 126, 234, 0.3);
