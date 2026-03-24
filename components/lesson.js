@@ -111,13 +111,6 @@ function renderExercise() {
       if (bar) bar.style.width = ((exerciseIdx + 1) / total * 100) + '%';
     }, 50);
   });
-}
-
-      const bar = document.getElementById('ex-progress');
-      if (bar) bar.style.width = ((exerciseIdx + 1) / total * 100) + '%';
-    }, 50);
-  });
-}
 
 function renderCodeBlock(code, type) {
   if (type === 'fill') {
@@ -501,6 +494,7 @@ routes['#lesson'] = () => {
 };
 
 window.startLesson = startLesson;
+window.checkAnswer = checkAnswer;
 window.selectOption = selectOption;
 window.submitFill = submitFill;
 window.nextExercise = nextExercise;
@@ -508,3 +502,4 @@ window.quitLesson = quitLesson;
 window.triggerConfetti = triggerConfetti;
 window.showOutOfHeartsModal = showOutOfHeartsModal;
 window.buyHeartRefill = buyHeartRefill;
+window.showXPPopup = showXPPopup;
