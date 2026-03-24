@@ -97,13 +97,25 @@ const BADGES = [
     rarity: 'common'
   },
   {
-    id: 'both-languages',
+    id: 'html-start',
+    name: 'Web Weaver',
+    icon: '🕸️',
+    description: 'Complete an HTML/CSS lesson',
+    condition: (state) => (state.completedLessons || []).some(id => id.startsWith('hc-')),
+    rarity: 'common'
+  },
+  {
+    id: 'polyglot',
     name: 'Polyglot',
     icon: '🌐',
-    description: 'Learn both Python and JavaScript',
+    description: 'Learn multiple technologies',
     condition: (state) => {
       const done = state.completedLessons || [];
-      return done.some(id => id.startsWith('py-')) && done.some(id => id.startsWith('js-'));
+      const hasPy = done.some(id => id.startsWith('py-'));
+      const hasJs = done.some(id => id.startsWith('js-'));
+      const hasHc = done.some(id => id.startsWith('hc-'));
+      // Count how many tech types they started
+      return [hasPy, hasJs, hasHc].filter(Boolean).length >= 2;
     },
     rarity: 'rare'
   },

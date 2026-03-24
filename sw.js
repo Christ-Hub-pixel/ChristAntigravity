@@ -2,7 +2,7 @@
 const CACHE_NAME = 'codelingo-v1';
 const ASSETS = [
   './',
-  './CodeLingo.html',
+  './index.html',
   './index.css',
   './app.js',
   './assets/icon.png',

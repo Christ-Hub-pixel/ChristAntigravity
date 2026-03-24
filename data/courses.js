@@ -850,6 +850,119 @@ const COURSES = {
         ]
       }
     ]
+  },
+
+  html_css: {
+    id: 'html_css',
+    name: 'HTML/CSS',
+    icon: '🕸️',
+    color: '#e34c26',
+    accent: '#264de4',
+    description: 'Build beautiful websites from scratch',
+    units: [
+      {
+        id: 'hc-basics',
+        title: 'HTML Basics',
+        icon: '📄',
+        color: '#f97316',
+        xpReward: 20,
+        lessons: [
+          {
+            id: 'hc-basics-1',
+            title: 'Your First Webpage',
+            icon: '🌍',
+            xpReward: 10,
+            exercises: [
+              {
+                type: 'mcq',
+                question: 'What does HTML stand for?',
+                options: ['Hyper Text Markup Language', 'High Tech Modern Language', 'Hyperlink Text Module Language', 'Home Tool Markup Language'],
+                correct: 0,
+                explanation: 'HTML defines the structure and content of a web page.'
+              },
+              {
+                type: 'fill',
+                question: 'Complete the tag to create a main heading:',
+                code: '<___>Welcome</___>',
+                answer: 'h1',
+                hint: 'Heading level 1',
+                explanation: '<h1> is the largest and most important heading tag in HTML.'
+              },
+              {
+                type: 'output',
+                question: 'What does this HTML create?',
+                code: '<p>Hello <strong>World</strong></p>',
+                options: ['A link to World', 'A paragraph with "World" bolded', 'A new window', 'An image'],
+                correct: 1,
+                explanation: 'The <p> tag creates a paragraph, and <strong> makes the text inside it bold.'
+              }
+            ]
+          },
+          {
+            id: 'hc-basics-2',
+            title: 'Links & Images',
+            icon: '🖼️',
+            xpReward: 15,
+            exercises: [
+              {
+                type: 'fill',
+                question: 'To create a hyperlink, use the "href" attribute inside which tag?',
+                code: '<___ href="https://google.com">Search</___>',
+                answer: 'a',
+                hint: 'Short for "anchor"',
+                explanation: 'The <a> (anchor) tag creates a clickable link.'
+              },
+              {
+                type: 'mcq',
+                question: 'Which tag is correct for displaying an image?',
+                options: ['<image src="cat.jpg">', '<img src="cat.jpg" />', '<picture href="cat.jpg">', '<src="cat.jpg">'],
+                correct: 1,
+                explanation: 'The <img> tag is empty (no closing tag) and uses "src" (source) to point to the image.'
+              }
+            ]
+          }
+        ]
+      },
+      {
+        id: 'hc-css',
+        title: 'CSS Styling',
+        icon: '🎨',
+        color: '#3b82f6',
+        xpReward: 30,
+        lessons: [
+          {
+            id: 'hc-css-1',
+            title: 'Adding Colors',
+            icon: '🖌️',
+            xpReward: 15,
+            exercises: [
+              {
+                type: 'fill',
+                question: 'Make the text color red in CSS:',
+                code: 'h1 {\n  ___: red;\n}',
+                answer: 'color',
+                hint: 'The property for text color',
+                explanation: 'The "color" property changes the text color of an element.'
+              },
+              {
+                type: 'mcq',
+                question: 'How do you select an element with id="main" in CSS?',
+                options: ['.main', '*main', '#main', 'main'],
+                correct: 2,
+                explanation: 'The # symbol is used to select elements by their ID in CSS.'
+              },
+              {
+                type: 'mcq',
+                question: 'How do you select elements with class="btn" in CSS?',
+                options: ['.btn', '#btn', 'btn', '*btn'],
+                correct: 0,
+                explanation: 'The . (dot) symbol is used to select elements by their class name.'
+              }
+            ]
+          }
+        ]
+      }
+    ]
   }
 };
 

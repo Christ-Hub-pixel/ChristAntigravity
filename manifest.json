@@ -2,7 +2,7 @@
   "name": "CodeLingo — Learn to Code",
   "short_name": "CodeLingo",
   "description": "Master Python and JavaScript gamification-style.",
-  "start_url": "./CodeLingo.html",
+  "start_url": "./index.html",
   "display": "standalone",
   "background_color": "#0a0a14",
   "theme_color": "#1cb0f6",
