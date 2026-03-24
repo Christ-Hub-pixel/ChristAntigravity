@@ -46,21 +46,23 @@ function renderExercise() {
     fill: `<span class="question-type-badge qtb-fill">${t('fill_badge')}</span>`,
   }[exercise.type] || '';
 
+  // Heart pips display
+  const heartPips = Array.from({length: 5}, (_, i) =>
+    `<span style="opacity:${i < AppState.hearts ? 1 : 0.2}">❤️</span>`
+  ).join('');
+
   const main = document.getElementById('app-main');
+  main.style.paddingBottom = '120px';
   main.innerHTML = `
     <!-- Top Bar -->
     <div class="exercise-topbar">
       <div class="exercise-close" onclick="quitLesson()">✕</div>
       <div class="exercise-progress-wrap">
-        <div class="exercise-progress-label">${exerciseIdx + 1} ${t('of_label')} ${total}</div>
-        <div class="progress-bar-track" style="height:8px;">
-          <div class="progress-bar-fill" id="ex-progress" style="width:${progress}%;transition:width 0.5s ease;"></div>
+        <div class="progress-bar-track">
+          <div class="progress-bar-fill" id="ex-progress" style="width:${progress}%;"></div>
         </div>
       </div>
-      <div style="display:flex;gap:8px;">
-        <div class="exercise-xp-badge" style="color:#ef4444;border-color:rgba(239,68,68,0.3);background:rgba(239,68,68,0.1)">❤️ <span id="lesson-hearts">${AppState.hearts}</span></div>
-        <div class="exercise-xp-badge">⚡ ${lesson.xpReward} XP</div>
-      </div>
+      <div class="exercise-lives" id="exercise-hearts">${heartPips}</div>
     </div>
 
     <!-- Question Card -->
@@ -71,26 +73,33 @@ function renderExercise() {
     </div>
 
     <!-- Answer Area -->
-    <div id="answer-area">
-      ${exerciseHTML}
-    </div>
+    <div id="answer-area">${exerciseHTML}</div>
+  `;
 
-    <!-- Feedback panel (hidden initially) -->
-    <div id="feedback-area"></div>
-
-    <!-- Next Button -->
-    <div class="next-btn-wrap" id="next-wrap" style="display:none;">
-      <button class="btn btn-primary btn-full btn-lg" onclick="nextExercise()">
-        ${exerciseIdx + 1 < total ? t('continue_btn') : t('finish_btn')}
-      </button>
-    </div>
+  // Inject the sticky lesson footer (bottom sheet)
+  let footer = document.getElementById('lesson-footer');
+  if (!footer) {
+    footer = document.createElement('div');
+    footer.id = 'lesson-footer';
+    footer.className = 'lesson-footer';
+    document.body.appendChild(footer);
+  }
+  const isLast = exerciseIdx + 1 >= total;
+  footer.className = 'lesson-footer';
+  footer.innerHTML = `
+    <button class="btn btn-primary btn-full btn-lg" id="check-btn" onclick="checkAnswer()" disabled>
+      ${t('check_btn')}
+    </button>
   `;
 
   if (exercise.type === 'fill') {
     const input = document.getElementById('fill-answer');
     if (input) {
+      input.addEventListener('input', () => {
+        document.getElementById('check-btn').disabled = input.value.trim() === '';
+      });
       input.addEventListener('keydown', (e) => {
-        if (e.key === 'Enter') submitFill();
+        if (e.key === 'Enter') checkAnswer();
       });
     }
   }
@@ -98,6 +107,12 @@ function renderExercise() {
   // Animate progress bar
   requestAnimationFrame(() => {
     setTimeout(() => {
+      const bar = document.getElementById('ex-progress');
+      if (bar) bar.style.width = ((exerciseIdx + 1) / total * 100) + '%';
+    }, 50);
+  });
+}
+
       const bar = document.getElementById('ex-progress');
       if (bar) bar.style.width = ((exerciseIdx + 1) / total * 100) + '%';
     }, 50);
@@ -125,12 +140,11 @@ function highlightCode(code) {
 }
 
 function renderMCQ(exercise) {
-  const letters = ['A', 'B', 'C', 'D'];
   return `
     <div class="options-grid">
       ${exercise.options.map((opt, i) => `
-        <button class="option-btn" id="opt-${i}" onclick="selectOption(${i})">
-          <span class="option-letter">${letters[i]}</span>
+        <button class="option-card" id="opt-${i}" onclick="selectOption(${i})">
+          <span class="option-letter">${['A','B','C','D'][i]}</span>
           <span>${escHtml(opt)}</span>
         </button>
       `).join('')}
@@ -205,18 +219,39 @@ const SoundManager = {
 
 function selectOption(idx) {
   if (lessonState.answered) return;
-  lessonState.answered = true;
-  lessonState.selectedOption = idx;
 
   const exercise = lessonState.lesson.exercises[lessonState.exerciseIdx];
+
+  // Toggle selection
+  document.querySelectorAll('.option-card').forEach(c => c.classList.remove('selected'));
+  document.getElementById(`opt-${idx}`)?.classList.add('selected');
+  lessonState.selectedOption = idx;
+
+  // Activate check button
+  const checkBtn = document.getElementById('check-btn');
+  if (checkBtn) checkBtn.disabled = false;
+}
+
+function checkAnswer() {
+  if (lessonState.answered) return;
+  const exercise = lessonState.lesson.exercises[lessonState.exerciseIdx];
+
+  if (exercise.type === 'fill') {
+    submitFill();
+    return;
+  }
+
+  const idx = lessonState.selectedOption;
+  if (idx === null || idx === undefined) return;
+
+  lessonState.answered = true;
   const isCorrect = idx === exercise.correct;
 
-  // Disable all options
-  document.querySelectorAll('.option-btn').forEach(btn => btn.disabled = true);
+  document.querySelectorAll('.option-card').forEach(btn => btn.disabled = true);
 
-  // Mark correct and wrong
   const selectedBtn = document.getElementById(`opt-${idx}`);
-  const correctBtn = document.getElementById(`opt-${exercise.correct}`);
+  const correctBtn  = document.getElementById(`opt-${exercise.correct}`);
+  selectedBtn?.classList.remove('selected');
   selectedBtn?.classList.add(isCorrect ? 'correct' : 'wrong');
   if (!isCorrect) correctBtn?.classList.add('correct');
 
@@ -226,16 +261,14 @@ function selectOption(idx) {
       AppState.hearts--;
       saveState();
       updateTopbar();
-      const lh = document.getElementById('lesson-hearts');
-      if (lh) lh.textContent = AppState.hearts;
     }
     SoundManager.play('wrong');
   } else {
     SoundManager.play('correct');
+    showXPPopup(t('xp_popup', {xp: 2}));
   }
 
   showFeedback(isCorrect, exercise.explanation);
-  if (isCorrect) showXPPopup(t('xp_popup', {xp: 2}));
 }
 
 function submitFill() {
@@ -251,60 +284,55 @@ function submitFill() {
   input.disabled = true;
   input.classList.add(isCorrect ? 'correct' : 'wrong');
 
-  // Hide submit button
-  const submitBtns = document.querySelectorAll('#answer-area .btn');
-  submitBtns.forEach(b => b.style.display = 'none');
-
   if (!isCorrect) {
     lessonState.mistakes++;
     if (AppState.hearts > 0) {
       AppState.hearts--;
       saveState();
       updateTopbar();
-      const lh = document.getElementById('lesson-hearts');
-      if (lh) lh.textContent = AppState.hearts;
     }
     SoundManager.play('wrong');
   } else {
     SoundManager.play('correct');
+    showXPPopup(t('xp_popup', {xp: 2}));
   }
 
-  showFeedback(isCorrect, exercise.explanation, isCorrect ? null : `${t('correct_answer')} <strong>${exercise.answer}</strong>`);
-  if (isCorrect) showXPPopup(t('xp_popup', {xp: 2}));
+  const extra = isCorrect ? null : `${t('correct_answer')} <strong>${exercise.answer}</strong>`;
+  showFeedback(isCorrect, exercise.explanation, extra);
 }
 
 function showFeedback(isCorrect, explanation, extra = null) {
   const { lesson, exerciseIdx } = lessonState;
-  const ex = lesson.exercises[exerciseIdx];
   const isLast = exerciseIdx + 1 >= lesson.exercises.length;
-
-  // Character reactions
-  const correctReactions = ['🥳', '✨', '🔥', '🎯', '🙌', '🚀'];
-  const wrongReactions   = ['🤔', '😅', '💡', '⚠️', '👀', '🥊'];
-  const react = isCorrect ? correctReactions[Math.floor(Math.random() * correctReactions.length)] :
-                           wrongReactions[Math.floor(Math.random() * wrongReactions.length)];
-
   const isOutOfHearts = AppState.hearts <= 0;
 
-  document.getElementById('feedback-area').innerHTML = `
-    <div class="feedback-sheet ${isCorrect ? 'correct' : 'wrong'}">
-      <div class="feedback-sheet-content">
-        <div class="feedback-char">${react}</div>
-        <div class="feedback-text">
-          <div class="feedback-title">${isCorrect ? t('correct_label') : t('wrong_label')}</div>
-          <div class="feedback-desc">${extra ? extra + '<br>' : ''}${escHtml(explanation)}</div>
+  const footer = document.getElementById('lesson-footer');
+  if (!footer) return;
+
+  const icon  = isCorrect ? '✅' : '❌';
+  const title = isCorrect ? t('correct_label') : t('wrong_label');
+  const nextAction = isOutOfHearts ? 'showOutOfHeartsModal()' : 'nextExercise()';
+  const nextLabel  = isOutOfHearts ? '💔 Plus de vies' : isLast ? t('finish_btn') : t('continue_btn');
+  const btnClass   = isCorrect ? 'btn-primary' : 'btn-danger';
+
+  footer.className = `lesson-footer ${isCorrect ? 'correct' : 'wrong'}`;
+  footer.innerHTML = `
+    <div class="footer-feedback">
+      <div class="footer-feedback-left">
+        <div class="footer-feedback-icon">${icon}</div>
+        <div>
+          <div class="footer-feedback-msg ${isCorrect ? 'correct' : 'wrong'}">${title}</div>
+          ${extra ? `<div class="footer-feedback-hint">${extra}</div>` : ''}
+          ${explanation && !extra ? `<div class="footer-feedback-hint">${escHtml(explanation)}</div>` : ''}
         </div>
       </div>
-      <button class="btn btn-primary btn-full shadow-none" onclick="${isOutOfHearts ? 'showOutOfHeartsModal()' : 'nextExercise()'}">
-        ${isOutOfHearts ? '💔 Plus de vies' : isLast ? t('finish_btn') : t('continue_btn')}
+      <button class="btn ${btnClass} btn-lg" onclick="${nextAction}" style="white-space:nowrap;min-width:160px;">
+        ${nextLabel}
       </button>
     </div>
   `;
-
-  // Ensure the next-wrap is hidden as the feedback sheet now contains the button
-  const nextWrap = document.getElementById('next-wrap');
-  if (nextWrap) nextWrap.style.display = 'none';
 }
+
 
 function nextExercise() {
   const { lesson } = lessonState;
@@ -319,8 +347,16 @@ function nextExercise() {
   }
 }
 
+function removeLessonFooter() {
+  const footer = document.getElementById('lesson-footer');
+  if (footer) footer.remove();
+  const main = document.getElementById('app-main');
+  if (main) main.style.paddingBottom = '';
+}
+
 function showLessonComplete() {
   const { courseId, lessonId, lesson, mistakes } = lessonState;
+  removeLessonFooter();
   const isPerfect = mistakes === 0;
   const result = completeLesson(lessonId, lesson.xpReward, isPerfect);
 
@@ -337,7 +373,7 @@ function showLessonComplete() {
       <p class="complete-sub">
         ${isPerfect ? t('perfect_sub') : `${t('mistake_sub')} ${mistakes} ${mistakes !== 1 ? t('mistakes_plural') : t('mistakes_word')}!`}
       </p>
-      
+
       <div class="xp-earned-premium">
         <span class="xp-icon">⚡</span>
         <span class="xp-val">+${lesson.xpReward} XP</span>

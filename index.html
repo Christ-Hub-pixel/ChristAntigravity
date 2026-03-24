@@ -1,37 +1,39 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="light">
+<html lang="en" data-theme="dark">
 
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>CodeLingo — Learn to Code while having fun!</title>
+  <title>CodeLingo — Learn to Code!</title>
   <meta name="description"
-    content="Master Python and JavaScript gamification-style. Earn XP, unlock badges, and build real skills — one lesson at a time." />
+    content="Master Python, JavaScript and more in a gamified, Duolingo-style experience. Earn XP, collect gems, and unlock badges — one lesson at a time." />
 
   <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet" />
 
   <!-- Styles -->
   <link rel="stylesheet" href="index.css" />
 
-  <!-- Favicon via emoji -->
+  <!-- Favicon -->
   <link rel="icon" href="assets/icon.png" type="image/png" />
+  <link rel="manifest" href="manifest.json" />
 </head>
 
 <body>
 
   <div id="app-wrapper">
 
-    <!-- Top Navbar -->
+    <!-- Top Navbar (Mobile only) -->
     <header id="app-topbar">
       <div class="logo">
-        <img src="assets/icon.png" alt="CodeLingo Icon" style="height: 32px; border-radius: 6px; margin-right: 8px;">
+        <img src="assets/icon.png" alt="CodeLingo Icon" class="logo-img">
         <span>CodeLingo</span>
       </div>
       <div class="topbar-stats">
         <div class="stat-pill hearts" title="Vies (Cœurs)">
-          <span class="stat-icon" style="color:#ef4444">❤️</span>
+          <span class="stat-icon">❤️</span>
           <span id="topbar-hearts">5</span>
         </div>
         <div class="stat-pill streak" title="Série de jours">
@@ -39,39 +41,30 @@
           <span id="topbar-streak">1</span>
         </div>
         <div class="stat-pill gems" title="Gemmes">
-          <span class="stat-icon" style="color:#3b82f6">💎</span>
+          <span class="stat-icon">💎</span>
           <span id="topbar-gems">500</span>
         </div>
         <div class="stat-pill xp" title="Points d'XP">
           <span class="stat-icon">⚡</span>
           <span id="topbar-xp">0</span>
         </div>
-        <button id="lang-toggle" onclick="cycleLang()" title="Change language">
+        <button id="lang-toggle" class="icon-topbar-btn" onclick="cycleLang()" title="Change language">
           <span id="lang-flag">🇬🇧</span>
-          <span id="lang-short">EN</span>
         </button>
-        <button id="theme-toggle" onclick="cycleTheme()" title="Change theme">
+        <button id="theme-toggle" class="icon-topbar-btn" onclick="cycleTheme()" title="Change theme">
           <span class="theme-icon" id="theme-icon">🌙</span>
-          <span id="theme-label">Dark</span>
         </button>
       </div>
     </header>
 
     <!-- Main Content Area -->
     <main id="app-main">
-      <!-- Pages are rendered here by JS -->
-      <div style="display:flex;align-items:center;justify-content:center;height:60vh;flex-direction:column;gap:16px;">
-        <img src="assets/logo.png" alt="CodeLingo Logo" style="width: 240px; margin-bottom: 20px; animation: float 3s infinite ease-in-out;">
-        <div style="color:var(--text-secondary);font-weight:700;font-size:1.2rem;letter-spacing:0.02em;">Loading CodeLingo…</div>
-        <div style="color:var(--text-muted);font-size:0.9rem;margin-top:4px;font-style:italic;">Apprenez à coder en vous amusant !</div>
+      <!-- Loading splash -->
+      <div class="splash-loading">
+        <img src="assets/logo.png" alt="CodeLingo Logo" class="splash-logo">
+        <div class="splash-text">Loading CodeLingo…</div>
+        <div class="splash-sub">Apprenez à coder en vous amusant !</div>
       </div>
-      <style>
-        @keyframes spin {
-          to {
-            transform: rotate(360deg);
-          }
-        }
-      </style>
     </main>
 
     <!-- Bottom/Side Navigation -->
@@ -79,7 +72,7 @@
       <!-- Desktop only: Stats & Toggles -->
       <div class="sidebar-top-section">
         <div class="stat-pill hearts" title="Vies (Cœurs)">
-          <span class="stat-icon" style="color:#ef4444">❤️</span>
+          <span class="stat-icon">❤️</span>
           <span id="sidebar-hearts">5</span>
         </div>
         <div class="stat-pill streak" title="Série de jours">
@@ -87,7 +80,7 @@
           <span id="sidebar-streak">1</span>
         </div>
         <div class="stat-pill gems" title="Gemmes">
-          <span class="stat-icon" style="color:#3b82f6">💎</span>
+          <span class="stat-icon">💎</span>
           <span id="sidebar-gems">500</span>
         </div>
         <div class="stat-pill xp" title="Points d'XP">
@@ -95,8 +88,8 @@
           <span id="sidebar-xp">0</span>
         </div>
         <div class="sidebar-toggles">
-          <button class="icon-btn" onclick="cycleLang()" title="Language">🇬🇧</button>
-          <button class="icon-btn" onclick="cycleTheme()" title="Theme">🌙</button>
+          <button class="icon-btn" onclick="cycleLang()" title="Language" id="lang-toggle-sidebar">🇬🇧</button>
+          <button class="icon-btn" onclick="cycleTheme()" title="Theme" id="theme-toggle-sidebar">🌙</button>
         </div>
       </div>
 
@@ -122,13 +115,13 @@
 
   <!-- Data Layer -->
   <script src="data/i18n.js"></script>
-   <script src="data/gamification.js"></script>
+  <script src="data/gamification.js"></script>
   <script src="data/courses.js"></script>
 
-  <!-- App Core: defines `routes` object and state — MUST load before components -->
+  <!-- App Core -->
   <script src="app.js"></script>
 
-  <!-- Components (may extend `routes` and reference app functions) -->
+  <!-- Components -->
   <script src="components/auth.js"></script>
   <script src="components/home.js"></script>
   <script src="components/course.js"></script>
