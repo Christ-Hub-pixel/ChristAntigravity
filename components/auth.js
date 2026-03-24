@@ -1,71 +1,100 @@
 // ============================================================
-// CodeLingo — Auth Component (Login / Signup)
+// CodeLingo — Auth Component (Login / Signup with Avatar Pick)
 // ============================================================
+
+const AVATARS = [
+  '🧑‍💻','👨‍💻','👩‍💻','🧒','👦','👧',
+  '🧑','👱','🧔','👴','👵','🧓',
+  '🐱','🐶','🦊','🐸','🐼','🐨',
+  '🦁','🐯','🐮','🐧','🦉','🦄',
+  '🚀','⚡','🎯','🔥','💎','🌟',
+];
+
+let selectedAvatar = '🧑‍💻';
 
 function renderAuth() {
   document.getElementById('app-topbar').style.display = 'none';
   document.getElementById('app-nav').style.display = 'none';
-  document.getElementById('app-main').style.paddingBottom = '0'; // Remove nav padding
+  document.getElementById('app-main').style.paddingBottom = '0';
 
   document.getElementById('app-main').innerHTML = `
-    <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:80vh;padding:20px;">
-      
-      <div style="text-align:center;margin-bottom:30px;">
-        <img src="assets/logo.png" alt="CodeLingo" style="width:280px;max-width:90%;height:auto;animation:float 3s infinite ease-in-out;">
-      </div>
+    <div class="auth-wrapper">
 
-      <div class="card" style="width:100%;max-width:360px;">
-        <h2 style="font-size:1.4rem;font-weight:700;margin-bottom:24px;text-align:center;">${t('auth_login_title')}</h2>
-        
+      <img src="assets/logo.png" alt="CodeLingo" class="auth-logo">
+
+      <div class="card auth-card">
+        <h2 class="auth-title">${t('auth_login_title')}</h2>
+
+        <!-- Avatar Picker -->
+        <div class="auth-avatar-section">
+          <div class="auth-avatar-preview" id="auth-avatar-preview">${selectedAvatar}</div>
+          <div class="auth-avatar-grid" id="auth-avatar-grid">
+            ${AVATARS.map(a => `
+              <button
+                class="avatar-pick-btn ${a === selectedAvatar ? 'selected' : ''}"
+                onclick="pickAvatar('${a}')"
+                title="${a}"
+              >${a}</button>
+            `).join('')}
+          </div>
+        </div>
+
         <form id="auth-form" onsubmit="handleAuthSubmit(event)">
-          <div style="margin-bottom:16px;">
-            <label style="display:block;font-size:0.85rem;color:var(--text-secondary);margin-bottom:6px;font-weight:600;">${t('auth_username')}</label>
-            <input type="text" id="auth-username" class="fill-input" required placeholder="CodeLearner" maxlength="20" style="width:100%;">
+          <div class="auth-field">
+            <label class="auth-label">${t('auth_username')}</label>
+            <input type="text" id="auth-username" class="fill-input" required
+              placeholder="CodeLearner" maxlength="20" autocomplete="username">
           </div>
-          
-          <div style="margin-bottom:24px;">
-            <label style="display:block;font-size:0.85rem;color:var(--text-secondary);margin-bottom:6px;font-weight:600;">${t('auth_password')}</label>
-            <input type="password" id="auth-password" class="fill-input" required placeholder="••••••••" style="width:100%;">
+          <div class="auth-field">
+            <label class="auth-label">${t('auth_password')}</label>
+            <input type="password" id="auth-password" class="fill-input" required
+              placeholder="••••••••" autocomplete="current-password">
           </div>
-          
-          <button type="submit" class="btn btn-primary btn-full">${t('auth_btn')} →</button>
+          <button type="submit" class="btn btn-primary btn-full btn-lg" style="margin-top:8px;">
+            ${t('auth_btn')} →
+          </button>
         </form>
       </div>
-      
     </div>
-    <style>
-      @keyframes bounce {
-        0%, 100% { transform: translateY(0); }
-        50% { transform: translateY(-15px); }
-      }
-    </style>
   `;
+}
+
+function pickAvatar(avatar) {
+  selectedAvatar = avatar;
+  const preview = document.getElementById('auth-avatar-preview');
+  if (preview) {
+    preview.textContent = avatar;
+    preview.style.transform = 'scale(1.3)';
+    setTimeout(() => { preview.style.transform = 'scale(1)'; }, 200);
+  }
+  document.querySelectorAll('.avatar-pick-btn').forEach(btn => {
+    btn.classList.toggle('selected', btn.textContent.trim() === avatar);
+  });
 }
 
 function handleAuthSubmit(e) {
   e.preventDefault();
   const username = document.getElementById('auth-username').value.trim();
-  
-  // Expert Validation: Alphanumeric and underscores only, 3-20 chars
+
   const nameRegex = /^[a-zA-Z0-9_]{3,20}$/;
   if (!nameRegex.test(username)) {
-    alert('Invalid username. Use 3-20 alphanumeric characters or underscores.');
+    alert('Nom invalide — 3 à 20 caractères (lettres, chiffres, _).');
     return;
   }
-  
-  if (username) {
-    AppState.username = username;
-    AppState.isLoggedIn = true;
-    saveState();
-    
-    // Restore nav visibility
-    document.getElementById('app-topbar').style.display = 'flex';
-    document.getElementById('app-nav').style.display = 'flex';
-    document.getElementById('app-main').style.paddingBottom = 'calc(var(--nav-height) + 20px)';
-    
-    navigate('#home');
-  }
+
+  AppState.username = username;
+  AppState.avatar   = selectedAvatar;
+  AppState.isLoggedIn = true;
+  saveState();
+
+  document.getElementById('app-topbar').style.display = 'flex';
+  document.getElementById('app-nav').style.display = 'flex';
+  document.getElementById('app-main').style.paddingBottom = '';
+
+  navigate('#home');
 }
 
-window.renderAuth = renderAuth;
+window.renderAuth       = renderAuth;
 window.handleAuthSubmit = handleAuthSubmit;
+window.pickAvatar       = pickAvatar;
+window.AVATARS          = AVATARS;

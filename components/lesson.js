@@ -111,6 +111,7 @@ function renderExercise() {
       if (bar) bar.style.width = ((exerciseIdx + 1) / total * 100) + '%';
     }, 50);
   });
+}
 
 function renderCodeBlock(code, type) {
   if (type === 'fill') {

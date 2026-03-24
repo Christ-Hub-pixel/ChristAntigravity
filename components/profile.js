@@ -30,21 +30,32 @@ function renderProfile() {
   document.getElementById('app-main').innerHTML = `
     <!-- Profile Hero -->
     <div class="profile-hero">
-      <div class="profile-avatar" style="position:relative;">
-        <div class="profile-level-ring"></div>
-        ${state.avatar}
+      <div class="profile-avatar" onclick="toggleAvatarPicker()" title="Changer d'avatar" style="cursor:pointer;position:relative;">
+        <span id="profile-avatar-display" style="font-size:3.5rem;transition:transform 0.2s ease;display:block;">${state.avatar}</span>
+        <div style="position:absolute;bottom:-4px;right:-4px;background:var(--accent-blue);border-radius:50%;width:22px;height:22px;display:flex;align-items:center;justify-content:center;font-size:0.65rem;border:2px solid var(--bg-primary);">✏️</div>
       </div>
-      <div class="profile-name">${escHtml(state.username)}</div>
-      <div class="profile-level-name">${t('level_prefix')} ${level.level} · ${escHtml(level.name)}</div>
+      <div>
+        <div class="profile-name">${escHtml(state.username)}</div>
+        <div class="profile-level-name">${t('level_prefix')} ${level.level} · ${escHtml(level.name)}</div>
+        <div class="profile-xp-section">
+          <div class="profile-xp-label">
+            <span>${state.totalXP} XP</span>
+            <span>${nextLevel ? `${nextLevel.minXP - state.totalXP} ${t('xp_to_next')} ${t('level_prefix')} ${nextLevel.level}` : t('max_level')}</span>
+          </div>
+          <div class="progress-bar-track">
+            <div class="progress-bar-fill" id="profile-xp-bar" style="width:0%;"></div>
+          </div>
+        </div>
+      </div>
+    </div>
 
-      <div class="profile-xp-section">
-        <div class="profile-xp-label">
-          <span>${state.totalXP} XP</span>
-          <span>${nextLevel ? `${nextLevel.minXP - state.totalXP} ${t('xp_to_next')} ${t('level_prefix')} ${nextLevel.level}` : t('max_level')}</span>
-        </div>
-        <div class="progress-bar-track">
-          <div class="progress-bar-fill" id="profile-xp-bar" style="width:0%;"></div>
-        </div>
+    <!-- Avatar Picker (hidden by default) -->
+    <div id="avatar-picker-panel" class="avatar-picker-panel" style="display:none;">
+      <div class="avatar-picker-header">Choisis ton avatar</div>
+      <div class="auth-avatar-grid">
+        ${(window.AVATARS || ['🧑‍💻','👨‍💻','👩‍💻','🐱','🐶','🦊','🐸','🐼','🦁','🐯','🚀','⚡','🎯','🔥','💎','🌟']).map(a => `
+          <button class="avatar-pick-btn ${a === state.avatar ? 'selected' : ''}" onclick="changeAvatar('${a}')">${a}</button>
+        `).join('')}
       </div>
     </div>
 
@@ -229,6 +240,29 @@ function confirmReset() {
   }
 }
 
-window.renderProfile = renderProfile;
-window.changeUsername = changeUsername;
-window.confirmReset = confirmReset;
+function changeAvatar(avatar) {
+  AppState.avatar = avatar;
+  saveState();
+  const display = document.getElementById('profile-avatar-display');
+  if (display) {
+    display.textContent = avatar;
+    display.style.transform = 'scale(1.3)';
+    setTimeout(() => { display.style.transform = 'scale(1)'; }, 200);
+  }
+  document.querySelectorAll('#avatar-picker-panel .avatar-pick-btn').forEach(btn => {
+    btn.classList.toggle('selected', btn.textContent.trim() === avatar);
+  });
+}
+
+function toggleAvatarPicker() {
+  const panel = document.getElementById('avatar-picker-panel');
+  if (!panel) return;
+  const isOpen = panel.style.display !== 'none';
+  panel.style.display = isOpen ? 'none' : 'block';
+}
+
+window.renderProfile    = renderProfile;
+window.changeUsername   = changeUsername;
+window.confirmReset     = confirmReset;
+window.changeAvatar     = changeAvatar;
+window.toggleAvatarPicker = toggleAvatarPicker;
