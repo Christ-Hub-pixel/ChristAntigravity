@@ -570,8 +570,8 @@ input {
   transition: transform 0.1s ease, box-shadow 0.1s ease;
   border: none;
   position: relative;
-  user-select: none;
   -webkit-user-select: none;
+  user-select: none;
 }
 
 /* Primary Green Button (the famous Duolingo button) */
@@ -989,26 +989,170 @@ input {
 
 
 
-.progress-bar-fill {
-  height: 100%;
-  border-radius: var(--radius-full);
-  background: var(--gradient-green);
-  transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+/* ── Learning Path (Duolingo-style map) ──────────────────── */
+.path-unit-header {
+  border-radius: var(--radius-xl);
+  padding: 20px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 32px;
+  box-shadow: 0 6px 0 rgba(0, 0, 0, 0.2);
+  color: #fff;
   position: relative;
+  overflow: hidden;
 }
 
-.progress-bar-fill::after {
+.path-unit-header::before {
   content: '';
   position: absolute;
-  right: 0;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 16px;
-  height: 16px;
-  background: white;
+  top: -30%;
+  right: -10%;
+  width: 120px;
+  height: 120px;
+  background: rgba(255,255,255,0.1);
   border-radius: 50%;
-  box-shadow: 0 0 10px var(--accent-green);
+  pointer-events: none;
 }
+
+.path-unit-info .path-unit-num {
+  font-size: 0.72rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  opacity: 0.85;
+  margin-bottom: 4px;
+}
+
+.path-unit-info .path-unit-title {
+  font-size: 1.3rem;
+  font-weight: 900;
+}
+
+.path-unit-badge {
+  font-size: 2.5rem;
+  opacity: 0.9;
+}
+
+/* The learning path container */
+.learning-path {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding: 0 20px 40px;
+  min-height: 200px;
+}
+
+.path-node-container {
+  position: relative;
+  display: flex;
+  justify-content: center;
+}
+
+/* Path node circles */
+.path-node {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.8rem;
+  cursor: pointer;
+  position: relative;
+  transition: transform 0.2s ease;
+  box-shadow: 0 5px 0 rgba(0,0,0,0.25);
+  border: none;
+}
+
+.path-node.completed {
+  background: var(--accent-green);
+  box-shadow: 0 5px 0 var(--accent-green-shadow);
+}
+
+.path-node.current {
+  background: var(--accent-blue);
+  box-shadow: 0 5px 0 var(--accent-blue-shadow);
+  animation: nodeBounceDuo 1.8s infinite ease-in-out;
+}
+
+.path-node.locked {
+  background: var(--bg-card);
+  border: 3px solid var(--border);
+  box-shadow: 0 5px 0 var(--border);
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.path-node:active:not(.locked) {
+  transform: translateY(5px) !important;
+  box-shadow: 0 0 0 !important;
+}
+
+@keyframes nodeBounceDuo {
+  0%, 100% { transform: translateY(0); }
+  40%       { transform: translateY(-8px); }
+  60%       { transform: translateY(-4px); }
+}
+
+.path-node-icon {
+  font-size: 1.6rem;
+  line-height: 1;
+}
+
+/* Tooltip shown on current node */
+.path-node-tooltip {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 50%;
+  transform: translateX(-50%);
+  white-space: nowrap;
+  background: var(--accent-blue);
+  color: #fff;
+  font-weight: 900;
+  font-size: 0.8rem;
+  padding: 5px 14px;
+  border-radius: var(--radius-full);
+  box-shadow: 0 4px 0 var(--accent-blue-shadow);
+  pointer-events: none;
+}
+
+.path-node-tooltip::before {
+  content: '';
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border: 6px solid transparent;
+  border-bottom-color: var(--accent-blue);
+}
+
+/* SVG lines between nodes */
+.path-svg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  overflow: visible;
+  z-index: -1;
+}
+
+.path-curve {
+  fill: none;
+  stroke: var(--border);
+  stroke-width: 6;
+  stroke-linecap: round;
+  stroke-dasharray: none;
+}
+
+.path-curve.completed {
+  stroke: var(--accent-green);
+}
+
 
 /* ── Section Headers ─────────────────────────────────────── */
 .section-header {
