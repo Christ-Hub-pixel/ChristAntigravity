@@ -153,8 +153,13 @@ function updateTopbar() {
   const xp = AppState.totalXP;
   const elStreak = document.getElementById('topbar-streak');
   const elXP = document.getElementById('topbar-xp');
+  const sideStreak = document.getElementById('sidebar-streak');
+  const sideXP = document.getElementById('sidebar-xp');
+  
   if (elStreak) elStreak.textContent = `${st}`;
   if (elXP) elXP.textContent = `${xp.toLocaleString()}`;
+  if (sideStreak) sideStreak.textContent = `${st}`;
+  if (sideXP) sideXP.textContent = `${xp.toLocaleString()}`;
 }
 
 window.renderHome = renderHome;

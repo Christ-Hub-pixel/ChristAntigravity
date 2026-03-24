@@ -66,8 +66,24 @@
       </style>
     </main>
 
-    <!-- Bottom Navigation -->
+    <!-- Bottom/Side Navigation -->
     <nav id="app-nav">
+      <!-- Desktop only: Stats & Toggles -->
+      <div class="sidebar-top-section">
+        <div class="stat-pill streak">
+          <span class="stat-icon">🔥</span>
+          <span id="sidebar-streak">1</span>
+        </div>
+        <div class="stat-pill xp">
+          <span class="stat-icon">⚡</span>
+          <span id="sidebar-xp">0</span>
+        </div>
+        <div class="sidebar-toggles">
+          <button class="icon-btn" onclick="cycleLang()" title="Language">🇬🇧</button>
+          <button class="icon-btn" onclick="cycleTheme()" title="Theme">🌙</button>
+        </div>
+      </div>
+
       <div class="nav-item" data-route="#home" id="nav-home">
         <span class="nav-icon">🏠</span>
         <span class="nav-label" id="nav-lbl-home">Home</span>
