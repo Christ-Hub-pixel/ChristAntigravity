@@ -19,6 +19,11 @@ const DEFAULT_STATE = {
   maxHearts: 5,
   lastHeartRefill: Date.now(),
   gems: 500,
+  uiPrefs: {
+    showAI: true,
+    theme: 'dark',
+    language: 'fr'
+  },
   _sig: '', // Integrity signature
 };
 
@@ -88,6 +93,7 @@ function loadState() {
       if (AppState.hearts === undefined) AppState.hearts = 5;
       if (AppState.maxHearts === undefined) AppState.maxHearts = 5;
       if (AppState.gems === undefined) AppState.gems = 500;
+      if (!AppState.uiPrefs) AppState.uiPrefs = { showAI: true, theme: 'dark', language: 'fr' };
       if (!AppState.lastHeartRefill) AppState.lastHeartRefill = Date.now();
 
       updateStreak();

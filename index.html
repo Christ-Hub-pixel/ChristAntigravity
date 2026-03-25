@@ -55,12 +55,9 @@
           <span class="stat-icon">⚡</span>
           <span id="topbar-xp">0</span>
         </div>
-        <button id="lang-toggle" class="icon-topbar-btn" onclick="cycleLang()" title="Change language">
-          <span id="lang-flag">🇬🇧</span>
-        </button>
-        <button id="theme-toggle" class="icon-topbar-btn" onclick="cycleTheme()" title="Change theme">
-          <span class="theme-icon" id="theme-icon">🌙</span>
-        </button>
+        <div class="stat-item" onclick="toggleSettings()" title="Paramètres">
+          <span class="stat-icon" style="font-size:1.2rem;">⚙️</span>
+        </div>
       </div>
     </header>
 
@@ -83,8 +80,8 @@
           <span id="sidebar-hearts">5</span>
         </div>
         <div class="stat-pill streak" title="Série de jours">
-          <span class="stat-icon">🔥</span>
-          <span id="sidebar-streak">1</span>
+          <span class="stat-icon">📅</span>
+          <span class="stat-value" id="top-streak">1</span>
         </div>
         <div class="stat-pill gems" title="Gemmes">
           <span class="stat-icon">💎</span>
@@ -93,10 +90,6 @@
         <div class="stat-pill xp" title="Points d'XP">
           <span class="stat-icon">⚡</span>
           <span id="sidebar-xp">0</span>
-        </div>
-        <div class="sidebar-toggles">
-          <button class="icon-btn" onclick="cycleLang()" title="Language" id="lang-toggle-sidebar">🇬🇧</button>
-          <button class="icon-btn" onclick="cycleTheme()" title="Theme" id="theme-toggle-sidebar">🌙</button>
         </div>
       </div>
 
@@ -124,6 +117,9 @@
   <button class="ai-fab" onclick="toggleAIChat()" title="Lingo AI Tutor">🤖</button>
   <div id="ai-chat-container" class="ai-chat-container" style="display:none;"></div>
 
+  <!-- Smart Quick Settings Panel -->
+  <div id="settings-panel-container" class="settings-panel-container" style="display:none;"></div>
+
   <!-- Data Layer -->
   <script src="data/i18n.js"></script>
   <script src="data/gamification.js"></script>
@@ -140,6 +136,7 @@
   <script src="components/leaderboard.js"></script>
   <script src="components/profile.js"></script>
   <script src="components/ai.js"></script>
+  <script src="components/settings.js"></script>
 
   <!-- Service Worker Registration -->
   <script>
