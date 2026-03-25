@@ -1,11 +1,14 @@
 {
-  "name": "CodeLingo — Learn to Code",
+  "name": "CodeLingo — Apprendre à coder",
   "short_name": "CodeLingo",
-  "description": "Master Python and JavaScript gamification-style.",
+  "description": "Apprenez Python et JavaScript de façon ludique, même hors ligne !",
   "start_url": "./index.html",
   "display": "standalone",
-  "background_color": "#0a0a14",
+  "orientation": "portrait",
+  "background_color": "#131f24",
   "theme_color": "#1cb0f6",
+  "scope": "./",
+  "lang": "fr",
   "icons": [
     {
       "src": "assets/icon.png",
