@@ -9,119 +9,119 @@ const COURSES = {
     icon: '🐍',
     color: '#3776ab',
     accent: '#ffd43b',
-    description: 'Master Python from zero to hero',
+    description: 'Maitrisez Python de zéro au niveau expert',
     units: [
       {
         id: 'py-basics',
-        title: 'Python Basics',
+        title: 'Bases de Python',
         icon: '🌱',
         color: '#22c55e',
         xpReward: 20,
         lessons: [
           {
             id: 'py-basics-1',
-            title: 'Your First Program',
+            title: 'Votre Premier Programme',
             icon: '👋',
             xpReward: 10,
             exercises: [
               {
                 type: 'mcq',
-                question: 'What does the following code print?\n\nprint("Hello, World!")',
+                question: 'Que va afficher le code suivant ?\n\nprint("Hello, World!")',
                 options: ['Hello World', 'Hello, World!', '"Hello, World!"', 'Error'],
                 correct: 1,
-                explanation: 'print() outputs the text inside the parentheses. Quotes define a string but aren\'t printed.'
+                explanation: 'print() affiche le texte entre parenthèses. Les guillemets définissent une chaîne mais ne sont pas affichés.'
               },
               {
                 type: 'fill',
-                question: 'Complete the code to print "Python is awesome!"',
-                code: '___("Python is awesome!")',
+                question: 'Complétez le code pour afficher "Python est génial !"',
+                code: '___("Python est génial !")',
                 answer: 'print',
-                hint: 'The built-in function to display output in Python',
-                explanation: 'print() is Python\'s built-in function for displaying output.'
+                hint: 'La fonction intégrée pour afficher du texte en Python',
+                explanation: 'print() est la fonction intégrée de Python pour afficher une sortie.'
               },
               {
                 type: 'mcq',
-                question: 'Which of these is a valid Python print statement?',
-                options: ['PRINT("hi")', 'print "hi"', 'print("hi")', 'Print("hi")'],
+                question: 'Laquelle de ces instructions print est valide en Python ?',
+                options: ['PRINT("salut")', 'print "salut"', 'print("salut")', 'Print("salut")'],
                 correct: 2,
-                explanation: 'Python is case-sensitive. print() must be lowercase and requires parentheses in Python 3.'
+                explanation: 'Python est sensible à la casse. print() doit être en minuscules et nécessite des parenthèses.'
               },
               {
                 type: 'output',
-                question: 'What is the output of this code?',
+                question: 'Quelle est la sortie de ce code ?',
                 code: 'print("Code")\nprint("Lingo")',
                 options: ['Code Lingo', 'CodeLingo', 'Code\nLingo', 'Error'],
                 correct: 2,
-                explanation: 'Each print() call adds a newline by default, so they appear on separate lines.'
+                explanation: 'Chaque appel à print() ajoute un saut de ligne par défaut.'
               }
             ]
           },
           {
             id: 'py-basics-2',
-            title: 'Comments & Style',
+            title: 'Commentaires et Style',
             icon: '💬',
             xpReward: 10,
             exercises: [
               {
                 type: 'mcq',
-                question: 'How do you write a single-line comment in Python?',
-                options: ['// This is a comment', '/* Comment */', '# This is a comment', '-- Comment'],
+                question: 'Comment écrire un commentaire sur une seule ligne en Python ?',
+                options: ['// Ceci est un commentaire', '/* Commentaire */', '# Ceci est un commentaire', '-- Commentaire'],
                 correct: 2,
-                explanation: 'Python uses the # symbol for single-line comments.'
+                explanation: 'Python utilise le symbole # pour les commentaires sur une seule ligne.'
               },
               {
                 type: 'fill',
-                question: 'Add a comment to explain the code:',
-                code: '___ This prints a greeting\nprint("Hello!")',
+                question: 'Ajoutez un commentaire pour expliquer le code :',
+                code: '___ Ce code dit bonjour\nprint("Bonjour !")',
                 answer: '#',
-                hint: 'The comment character in Python',
-                explanation: '# starts a single-line comment in Python. Everything after it on that line is ignored.'
+                hint: 'Le caractère de commentaire en Python',
+                explanation: '# commence un commentaire simple en Python. Tout ce qui suit sur cette ligne est ignoré.'
               },
               {
                 type: 'output',
-                question: 'What does this code print?',
-                code: '# print("Hidden")\nprint("Visible")',
-                options: ['Hidden\nVisible', 'Visible', '# print("Hidden")\nVisible', 'Nothing'],
+                question: 'Que va afficher ce code ?',
+                code: '# print("Caché")\nprint("Visible")',
+                options: ['Caché\nVisible', 'Visible', '# print("Caché")\nVisible', 'Rien'],
                 correct: 1,
-                explanation: 'Lines starting with # are comments and are not executed.'
+                explanation: 'Les lignes commençant par # sont des commentaires et ne sont pas exécutées.'
               }
             ]
           },
           {
             id: 'py-basics-3',
-            title: 'Numbers & Math',
+            title: 'Nombres et Maths',
             icon: '➗',
             xpReward: 15,
             exercises: [
               {
                 type: 'mcq',
-                question: 'What is the result of: 10 // 3',
+                question: 'Quel est le résultat de : 10 // 3',
                 options: ['3.33', '3', '4', '1'],
                 correct: 1,
-                explanation: '// is integer (floor) division in Python. 10 // 3 = 3 (ignores the remainder).'
+                explanation: '// est la division entière en Python. 10 // 3 = 3 (ignore le reste).'
               },
               {
                 type: 'mcq',
-                question: 'Which operator gives the remainder of a division?',
+                question: 'Quel opérateur donne le reste d\'une division ?',
                 options: ['/', '//', '%', '**'],
                 correct: 2,
-                explanation: '% is the modulo operator. 10 % 3 = 1 because 10 = 3×3 + 1.'
+                explanation: '% est l\'opérateur modulo. 10 % 3 = 1 car 10 = 3×3 + 1.'
               },
               {
                 type: 'fill',
-                question: 'Write the operator to raise 2 to the power of 3:',
-                code: 'result = 2 ___ 3\nprint(result)  # prints 8',
+                question: 'Écrivez l\'opérateur pour élever 2 à la puissance 3 :',
+                code: 'resultat = 2 ___ 3\nprint(resultat)  # affiche 8',
                 answer: '**',
-                hint: 'Python uses a special operator for exponentiation',
-                explanation: '** is the exponentiation operator. 2 ** 3 = 8.'
+                hint: 'Python utilise un opérateur spécial pour les puissances',
+                explanation: '** est l\'opérateur d\'exponentielle. 2 ** 3 = 8.'
               },
               {
                 type: 'output',
-                question: 'What does this print?',
+                question: 'Que va afficher ceci ?',
                 code: 'print(15 % 4)',
                 options: ['3', '3.75', '4', '1'],
                 correct: 0,
-                explanation: '15 % 4 = 3 because 15 = 4×3 + 3. The remainder is 3.'
+                explanation: '15 % 4 = 3 car 15 = 4×3 + 3. Le reste est 3.'
               }
             ]
           }
@@ -129,84 +129,84 @@ const COURSES = {
       },
       {
         id: 'py-variables',
-        title: 'Variables & Types',
+        title: 'Variables et Types',
         icon: '📦',
         color: '#8b5cf6',
         xpReward: 25,
         lessons: [
           {
             id: 'py-vars-1',
-            title: 'Creating Variables',
+            title: 'Créer des Variables',
             icon: '🏷️',
             xpReward: 10,
             exercises: [
               {
                 type: 'mcq',
-                question: 'Which variable name is valid in Python?',
-                options: ['2name', 'my-name', 'my_name', 'my name'],
+                question: 'Quel nom de variable est valide en Python ?',
+                options: ['2nom', 'mon-nom', 'mon_nom', 'mon nom'],
                 correct: 2,
-                explanation: 'Variable names cannot start with numbers, contain hyphens or spaces. Underscores are allowed.'
+                explanation: 'Les noms de variables ne peuvent pas commencer par un nombre, ni contenir de tirets ou d\'espaces. Les tirets du bas _ sont autorisés.'
               },
               {
                 type: 'fill',
-                question: 'Assign the value 42 to a variable called "answer":',
+                question: 'Assignez la valeur 42 à une variable appelée "reponse" :',
                 code: '___ = 42',
-                answer: 'answer',
-                hint: 'The variable name goes on the left side of =',
-                explanation: 'Variables are created with name = value. No type declaration needed in Python.'
+                answer: 'reponse',
+                hint: 'Le nom de variable va à gauche du =',
+                explanation: 'Les variables sont créées avec la syntaxe nom = valeur. Pas besoin de déclarer le type en Python.'
               },
               {
                 type: 'output',
-                question: 'What does this print?',
+                question: 'Que va afficher ce code ?',
                 code: 'x = 5\nx = x + 3\nprint(x)',
-                options: ['5', '3', '8', 'Error'],
+                options: ['5', '3', '8', 'Erreur'],
                 correct: 2,
-                explanation: 'x starts as 5, then x + 3 = 8 is assigned back to x.'
+                explanation: 'x commence à 5, puis x + 3 = 8 est réassigné à x.'
               },
               {
                 type: 'mcq',
-                question: 'What type is the variable: name = "Alice"',
+                question: 'De quel type est la variable : nom = "Alice"',
                 options: ['int', 'float', 'str', 'bool'],
                 correct: 2,
-                explanation: 'Text wrapped in quotes is a string (str) in Python.'
+                explanation: 'Du texte entre guillemets est une chaîne de caractères (str) en Python.'
               }
             ]
           },
           {
             id: 'py-vars-2',
-            title: 'Data Types',
+            title: 'Types de Données',
             icon: '🎲',
             xpReward: 15,
             exercises: [
               {
                 type: 'mcq',
-                question: 'What type is: x = 3.14',
+                question: 'De quel type est : x = 3.14',
                 options: ['int', 'float', 'str', 'double'],
                 correct: 1,
-                explanation: 'Numbers with decimal points are floats in Python.'
+                explanation: 'Les nombres avec une virgule (point) sont des floats (flottants) en Python.'
               },
               {
                 type: 'mcq',
-                question: 'What type is: active = True',
+                question: 'De quel type est : actif = True',
                 options: ['string', 'int', 'bool', 'None'],
                 correct: 2,
-                explanation: 'True and False are boolean (bool) values. Note the capital T and F.'
+                explanation: 'True et False sont des valeurs booléennes (bool). Notez les majuscules T et F.'
               },
               {
                 type: 'fill',
-                question: 'Get the type of a variable:',
+                question: 'Obtenez le type d\'une variable :',
                 code: 'x = 42\nprint(___(x))',
                 answer: 'type',
-                hint: 'Built-in function that returns the type of a value',
+                hint: 'Fonction intégrée qui retourne le type d\'une valeur',
                 explanation: 'type() returns the data type of any value.'
               },
               {
                 type: 'output',
-                question: 'What does this print?',
+                question: 'Que va afficher ce code ?',
                 code: 'x = "5"\ny = 5\nprint(type(x) == type(y))',
                 options: ['True', 'False', 'Error', 'None'],
                 correct: 1,
-                explanation: '"5" is a str and 5 is an int — they are different types, so the comparison is False.'
+                explanation: '"5" est une chaîne de caractères (str) et 5 est un entier (int) — ce sont des types différents, donc la comparaison est Faux.'
               }
             ]
           },

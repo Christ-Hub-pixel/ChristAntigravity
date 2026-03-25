@@ -158,9 +158,11 @@ input { font-family: inherit; }
   gap: 6px;
 }
 
-@media (max-width: 400px) {
+@media (max-width: 600px) {
   .logo span { display: none; }
   .topbar-stats { gap: 4px; }
+  .topbar-stats .stat-pill.gems { display: none; }
+  .topbar-stats .stat-pill.xp { display: none; }
 }
 
 /* ── Stat Pill ───────────────────────────────────────────── */
