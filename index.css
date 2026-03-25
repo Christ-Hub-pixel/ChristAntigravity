@@ -1070,23 +1070,66 @@ input { font-family: inherit; }
 .s-val  { font-size: 1.3rem; font-weight: 900; display: block; }
 .s-lbl  { font-size: 0.68rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; margin-top: 2px; }
 
-/* ── Leaderboard ─────────────────────────────────────────── */
-.lb-title { font-size: 1.4rem; font-weight: 900; margin-bottom: 6px; }
-.lb-sub   { font-size: 0.85rem; color: var(--text-secondary); font-weight: 600; margin-bottom: 20px; }
-.lb-row {
-  display: flex; align-items: center; gap: 12px;
-  padding: 13px 16px;
-  background: var(--bg-card); border: 2px solid var(--border);
-  border-radius: var(--radius-lg); margin-bottom: 8px;
-  transition: var(--transition);
+/* ── Premium Leaderboard ─────────────────────────────────── */
+.leaderboard-toggle-premium {
+  display: flex; background: var(--bg-secondary);
+  border-radius: var(--radius-full); padding: 4px;
+  border: 2px solid var(--border); margin-bottom: 24px;
 }
-.lb-row:hover { border-color: var(--border-hover); }
-.lb-row.is-you { border-color: var(--accent-blue); background: rgba(28,176,246,0.08); }
-.lb-rank { font-size: 1rem; font-weight: 900; width: 28px; text-align: center; flex-shrink: 0; }
-.lb-avatar { font-size: 1.5rem; }
-.lb-name   { flex: 1; font-weight: 800; font-size: 0.95rem; }
-.lb-xp     { font-weight: 900; font-size: 0.88rem; color: var(--accent-yellow); }
-.lb-badge  { font-size: 0.72rem; font-weight: 800; color: var(--accent-blue); background: rgba(28,176,246,0.1); padding: 2px 8px; border-radius: var(--radius-full); }
+.lb-toggle-item {
+  flex: 1; text-align: center; padding: 10px 0;
+  border-radius: var(--radius-full); font-weight: 800;
+  font-size: 0.9rem; color: var(--text-muted); cursor: pointer;
+  transition: all 0.2s ease;
+}
+.lb-toggle-item.active {
+  background: var(--bg-card); color: var(--accent-blue);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.premium-podium {
+  display: flex; align-items: flex-end; justify-content: center;
+  gap: 12px; margin-bottom: 32px; padding-top: 20px;
+}
+.podium-place {
+  display: flex; flex-direction: column; align-items: center;
+  position: relative; width: 30%; max-width: 120px;
+}
+.podium-avatar { font-size: 3rem; margin-bottom: -15px; position: relative; z-index: 2; filter: drop-shadow(0 4px 8px rgba(0,0,0,0.2)); }
+.podium-rank-badge {
+  width: 28px; height: 28px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 900; font-size: 0.8rem; color: #fff;
+  position: relative; z-index: 3; border: 3px solid var(--bg-primary);
+}
+.podium-name { font-weight: 900; font-size: 0.85rem; margin-top: 8px; width: 100%; text-align: center; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.podium-xp { font-size: 0.75rem; color: var(--accent-yellow); font-weight: 800; }
+.podium-crown { position: absolute; top: -30px; font-size: 2rem; z-index: 10; animation: floatBounce 3s infinite; filter: drop-shadow(0 2px 4px rgba(0,200,0,0.5)); }
+
+.podium-place.first .podium-avatar { font-size: 4.5rem; }
+.podium-place.first .podium-rank-badge { background: var(--accent-yellow); width: 36px; height: 36px; font-size: 1rem; }
+.podium-place.second .podium-rank-badge { background: #94a3b8; }
+.podium-place.third .podium-rank-badge { background: #b45309; }
+
+.premium-lb-list { display: flex; flex-direction: column; gap: 8px; }
+.premium-lb-item {
+  display: flex; align-items: center; gap: 14px;
+  padding: 14px 18px; background: var(--bg-card);
+  border: 2px solid var(--border); border-radius: var(--radius-lg);
+  transition: transform 0.15s ease, border-color 0.15s ease;
+}
+.premium-lb-item:hover { border-color: var(--border-hover); transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+.premium-lb-item.is-user { border-color: var(--accent-blue); background: rgba(28,176,246,0.08); }
+
+.lb-rank-num { font-weight: 900; font-size: 1.1rem; width: 28px; text-align: center; color: var(--text-muted); }
+.premium-lb-item.is-user .lb-rank-num { color: var(--accent-blue); }
+.lb-avatar-circle { font-size: 2rem; width: 50px; height: 50px; border-radius: 50%; background: var(--bg-secondary); display: flex; align-items: center; justify-content: center; border: 2px solid var(--border); }
+.lb-user-info { flex: 1; min-width: 0; }
+.lb-user-name { font-weight: 900; font-size: 1.05rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.premium-lb-item.is-user .lb-user-name { color: var(--accent-blue); }
+.lb-user-meta { font-size: 0.75rem; color: var(--text-muted); font-weight: 700; margin-top: 2px; }
+.lb-user-xp { font-weight: 900; font-size: 0.95rem; color: var(--accent-yellow); }
+
 
 /* ── Utilities ───────────────────────────────────────────── */
 .mb-10 { margin-bottom: 10px; }
