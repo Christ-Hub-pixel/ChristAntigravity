@@ -123,14 +123,26 @@ function renderCodeBlock(code, type) {
 }
 
 function highlightCode(code) {
-  // Basic syntax highlighting
-  return escHtml(code)
-    .replace(/\b(def|return|for|in|if|else|elif|while|import|from|class|print|True|False|None|and|or|not|const|let|var|function|async|await|new|this|typeof|console|document)\b/g,
-      '<span class="code-keyword">$1</span>')
-    .replace(/"([^"]*)"|'([^']*)'/g, (m) => `<span class="code-string">${m}</span>`)
-    .replace(/\b(\d+\.?\d*)\b/g, '<span class="code-number">$1</span>')
-    .replace(/(#[^\n]*)/g, '<span class="code-comment">$1</span>')
-    .replace(/\/\/[^\n]*/g, (m) => `<span class="code-comment">${m}</span>`);
+  // Safe multi-pass regex highlighting using placeholders to avoid HTML injection conflicts
+  let hl = escHtml(code);
+  
+  // 1. Comments
+  hl = hl.replace(/(#[^\n]*)/g, 'XX_C_S_XX$1XX_END_XX')
+         .replace(/\/\/[^\n]*/g, 'XX_C_S_XX$&XX_END_XX');
+  // 2. Strings
+  hl = hl.replace(/"([^"]*)"|'([^']*)'/g, 'XX_S_S_XX$&XX_END_XX');
+  // 3. Keywords
+  hl = hl.replace(/\b(def|return|for|in|if|else|elif|while|import|from|class|print|True|False|None|and|or|not|const|let|var|function|async|await|new|this|typeof|console|document)\b/g, 'XX_K_S_XX$1XX_END_XX');
+  // 4. Numbers (avoiding inside strings/already matched stuff by relying on word boundaries)
+  hl = hl.replace(/\b(\d+\.?\d*)\b/g, 'XX_N_S_XX$1XX_END_XX');
+
+  // Replace placeholders with actual HTML spans
+  return hl
+    .replace(/XX_C_S_XX/g, '<span class="code-comment">')
+    .replace(/XX_S_S_XX/g, '<span class="code-string">')
+    .replace(/XX_K_S_XX/g, '<span class="code-keyword">')
+    .replace(/XX_N_S_XX/g, '<span class="code-number">')
+    .replace(/XX_END_XX/g, '</span>');
 }
 
 function renderMCQ(exercise) {
