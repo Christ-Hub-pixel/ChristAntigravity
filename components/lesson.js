@@ -117,9 +117,9 @@ function renderCodeBlock(code, type) {
   if (type === 'fill') {
     // Replace ___ with a highlighted blank span
     const highlighted = highlightCode(code).replace('___', '<span class="code-blank">___</span>');
-    return `<div class="code-snippet">${highlighted}</div>`;
+    return `<div class="code-snippet notranslate" translate="no">${highlighted}</div>`;
   }
-  return `<div class="code-snippet">${highlightCode(code)}</div>`;
+  return `<div class="code-snippet notranslate" translate="no">${highlightCode(code)}</div>`;
 }
 
 function highlightCode(code) {
@@ -149,8 +149,8 @@ function renderMCQ(exercise) {
   return `
     <div class="options-grid">
       ${exercise.options.map((opt, i) => `
-        <button class="option-card" id="opt-${i}" onclick="selectOption(${i})">
-          <span class="option-letter">${['A','B','C','D'][i]}</span>
+        <button class="option-card notranslate" translate="no" id="opt-${i}" onclick="selectOption(${i})">
+          <span class="option-letter" translate="yes">${['A','B','C','D'][i]}</span>
           <span>${escHtml(opt)}</span>
         </button>
       `).join('')}
@@ -161,7 +161,7 @@ function renderMCQ(exercise) {
 function renderFill(exercise) {
   return `
     <div class="fill-input-wrap">
-      <input type="text" class="fill-input" id="fill-answer" 
+      <input type="text" class="fill-input notranslate" translate="no" id="fill-answer" 
              placeholder="Type your answer..." autocomplete="off" autocorrect="off" spellcheck="false" />
     </div>
     <div class="fill-hint">${t('hint_label')} ${escHtml(exercise.hint)}</div>
