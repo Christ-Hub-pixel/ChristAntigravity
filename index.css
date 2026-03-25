@@ -956,6 +956,89 @@ input { font-family: inherit; }
 .auth-field { margin-bottom: 16px; }
 .auth-label { display: block; font-size: 0.82rem; color: var(--text-secondary); font-weight: 700; margin-bottom: 6px; }
 
+/* ── Language Picker (Auth Step 2) ───────────────────────── */
+.lang-pick-header { text-align: center; margin-bottom: 24px; }
+.lang-pick-title  { font-size: 1.6rem; font-weight: 900; margin-bottom: 6px; }
+.lang-pick-sub    { font-size: 0.95rem; color: var(--text-secondary); font-weight: 600; max-width: 400px; margin: 0 auto; line-height: 1.4; }
+
+.lang-pick-grid {
+  display: grid; grid-template-columns: 1fr; gap: 12px;
+  width: 100%; max-width: 400px;
+}
+@media (min-width: 480px) { .lang-pick-grid { grid-template-columns: 1fr 1fr; max-width: 500px; } }
+
+.lang-card {
+  display: flex; align-items: center; gap: 14px;
+  padding: 16px; background: var(--bg-card);
+  border: 2px solid var(--border); border-radius: var(--radius-lg);
+  cursor: pointer; transition: all 0.15s ease;
+  text-align: left; position: relative;
+  box-shadow: 0 4px 0 var(--border);
+}
+.lang-card:hover:not(.selected) { border-color: var(--border-hover); transform: translateY(-2px); box-shadow: 0 6px 0 var(--border-hover); }
+.lang-card:active { transform: translateY(4px) !important; box-shadow: 0 0 0 !important; }
+.lang-card.selected {
+  border-color: var(--accent-blue);
+  background: rgba(28,176,246,0.1);
+  box-shadow: 0 4px 0 var(--accent-blue-shadow);
+}
+.lang-card-flag { font-size: 2rem; line-height: 1; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2)); }
+.lang-card-info { flex: 1; }
+.lang-card-name { font-weight: 800; font-size: 1.05rem; margin-bottom: 2px; color: var(--text-primary); }
+.lang-card-sub  { font-size: 0.75rem; color: var(--text-muted); font-weight: 700; line-height: 1.2; }
+.lang-card-check {
+  width: 24px; height: 24px; border-radius: 50%;
+  background: var(--accent-blue); color: white;
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 900; font-size: 0.85rem;
+  opacity: 0; transform: scale(0.5); transition: all 0.2s cubic-bezier(0.34,1.56,0.64,1);
+}
+.lang-card-check.visible { opacity: 1; transform: scale(1); }
+
+/* ── Global Language Modal ───────────────────────────────── */
+.lang-modal-overlay {
+  position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+  background: rgba(0,0,0,0.5); backdrop-filter: blur(3px);
+  z-index: 9999; display: flex; align-items: center; justify-content: center;
+  padding: 20px; opacity: 0; transition: opacity 0.2s ease;
+}
+.lang-modal-overlay.open { opacity: 1; }
+.lang-modal-box {
+  background: var(--bg-card); border: 2px solid var(--border);
+  border-radius: var(--radius-xl); padding: 24px;
+  width: 100%; max-width: 380px; box-shadow: 0 12px 40px rgba(0,0,0,0.3);
+  transform: translateY(20px) scale(0.95); transition: transform 0.2s cubic-bezier(0.34,1.56,0.64,1);
+}
+.lang-modal-overlay.open .lang-modal-box { transform: translateY(0) scale(1); }
+.lang-modal-header {
+  display: flex; align-items: center; justify-content: space-between;
+  font-size: 1.2rem; font-weight: 900; margin-bottom: 8px;
+}
+.lang-modal-close {
+  width: 32px; height: 32px; border-radius: 50%;
+  background: var(--bg-secondary); display: flex; align-items: center; justify-content: center;
+  font-weight: 900; border: 2px solid var(--border); color: var(--text-muted); transition: all 0.15s ease;
+}
+.lang-modal-close:hover { border-color: var(--accent-red); color: var(--accent-red); background: var(--accent-red-bg); }
+.lang-modal-note {
+  font-size: 0.8rem; color: var(--text-secondary); font-weight: 600;
+  margin-bottom: 20px; padding: 10px; background: rgba(28,176,246,0.1);
+  border-radius: var(--radius-md); border: 1px dashed var(--accent-blue);
+}
+.lang-modal-row {
+  display: flex; align-items: center; gap: 12px;
+  padding: 12px 16px; border-radius: var(--radius-md);
+  margin-bottom: 8px; background: var(--bg-secondary);
+  border: 2px solid var(--border); color: var(--text-primary);
+  font-weight: 800; font-size: 1rem; width: 100%; transition: all 0.15s ease; cursor: pointer;
+}
+.lang-modal-row:hover { border-color: var(--accent-blue); background: var(--bg-card); transform: translateY(-1px); box-shadow: 0 3px 0 var(--border); }
+.lang-modal-row.active { border-color: var(--accent-green); background: var(--accent-green-bg); }
+.lang-modal-flag { font-size: 1.5rem; filter: drop-shadow(0 2px 2px rgba(0,0,0,0.2)); }
+.lang-modal-label { flex: 1; text-align: left; }
+.lang-modal-tick { color: var(--accent-green); font-size: 1.2rem; font-weight: 900; }
+
+
 /* ── Profile Page ────────────────────────────────────────── */
 .profile-hero {
   display: flex; align-items: center; gap: 16px;

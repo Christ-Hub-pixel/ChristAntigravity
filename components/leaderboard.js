@@ -39,9 +39,6 @@ function renderLeaderboard() {
       <div style="font-size:0.85rem;color:var(--text-secondary);">${t('lb_rank')} <span style="color:var(--accent-green);font-weight:700;">#${userRank}</span></div>
     </div>
 
-    <!-- Toggle -->
-    <div class="leaderboard-toggle">
-      <div class="lb-toggle-btn ${lbMode === 'weekly' ? 'active' : ''}" onclick="switchLbMode('weekly')">${t('lb_weekly')}</div>
     <!-- Leaderboard Toggle -->
     <div class="leaderboard-toggle-premium mb-20">
       <div class="lb-toggle-item ${lbMode === 'weekly' ? 'active' : ''}" onclick="switchLbMode('weekly')">${t('lb_weekly')}</div>
@@ -73,7 +70,7 @@ function renderLeaderboard() {
 
     <!-- List -->
     <div class="premium-lb-list">
-      ${others.map((u, i) => {
+      ${rest.map((u, i) => {
         const isUser = u.name === state.username;
         return `
           <div class="premium-lb-item ${isUser ? 'is-user' : ''}">
