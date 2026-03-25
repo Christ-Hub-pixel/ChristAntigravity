@@ -324,7 +324,7 @@ function showFeedback(isCorrect, explanation, extra = null) {
   footer.className = `lesson-footer ${isCorrect ? 'correct' : 'wrong'}`;
   footer.innerHTML = `
     <div class="footer-feedback">
-      <div class="footer-feedback-left">
+      <div class="footer-feedback-left" style="flex:1;">
         <div class="footer-feedback-icon">${icon}</div>
         <div>
           <div class="footer-feedback-msg ${isCorrect ? 'correct' : 'wrong'}">${title}</div>
@@ -332,11 +332,32 @@ function showFeedback(isCorrect, explanation, extra = null) {
           ${explanation && !extra ? `<div class="footer-feedback-hint">${escHtml(explanation)}</div>` : ''}
         </div>
       </div>
-      <button class="btn ${btnClass} btn-lg" onclick="${nextAction}" style="white-space:nowrap;min-width:160px;">
-        ${nextLabel}
-      </button>
+      <div style="display:flex; gap:12px; align-items:center;">
+        <button class="btn btn-secondary" onclick="requestAIExplanation()" style="padding: 10px 16px; font-size: 0.9rem;">
+          🤖 Aide IA
+        </button>
+        <button class="btn ${btnClass} btn-lg" onclick="${nextAction}" style="white-space:nowrap;min-width:160px;">
+          ${nextLabel}
+        </button>
+      </div>
     </div>
   `;
+}
+
+function requestAIExplanation() {
+  const ex = lessonState.lesson.exercises[lessonState.exerciseIdx];
+  const context = {
+    question: ex.question,
+    code: ex.code || '',
+    explanation: ex.explanation,
+    type: ex.type
+  };
+  
+  if (typeof window.openAIHelp === 'function') {
+    window.openAIHelp(context);
+  } else {
+    toggleAIChat();
+  }
 }
 
 

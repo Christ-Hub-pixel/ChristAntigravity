@@ -13,7 +13,8 @@ const ASSETS = [
   './components/course.js',
   './components/lesson.js',
   './components/leaderboard.js',
-  './components/profile.js'
+  './components/profile.js',
+  './components/ai.js'
 ];
 
 // Install: Cache all critical assets
