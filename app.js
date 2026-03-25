@@ -212,12 +212,28 @@ function handleRoute() {
 
   const main = document.getElementById('app-main');
   main.classList.add('page-exit');
+  
   setTimeout(() => {
     main.classList.remove('page-exit');
-    const render = routes[hash] || routes['#home'];
-    render();
+    
+    // Inject the avatar loading screen
+    const avatar = AppState.avatar || '🧑‍💻';
+    main.innerHTML = `
+      <div class="splash-loading" style="height: 60vh;">
+        <div class="splash-logo" style="font-size: 5rem; line-height: 1;">${avatar}</div>
+        <div class="splash-text">Chargement...</div>
+      </div>
+    `;
     main.classList.add('page-enter');
-    setTimeout(() => main.classList.remove('page-enter'), 400);
+    
+    // Wait a brief moment to show the gamified loader, then render the actual route
+    setTimeout(() => {
+      main.classList.remove('page-enter');
+      const render = routes[hash] || routes['#home'];
+      render();
+      main.classList.add('page-enter');
+      setTimeout(() => main.classList.remove('page-enter'), 300);
+    }, 350);
   }, 150);
 }
 
