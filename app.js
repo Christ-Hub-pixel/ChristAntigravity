@@ -3,9 +3,10 @@
 // ============================================================
 
 const DEFAULT_STATE = {
+  isLoggedIn: false,
   username: 'CodeLearner',
   avatar: '🧑‍💻',
-  isLoggedIn: false,
+  password: '', // New: Store password for local sessions
   totalXP: 0,
   lessonsCompleted: 0,
   perfectLessons: 0,
@@ -19,11 +20,15 @@ const DEFAULT_STATE = {
   maxHearts: 5,
   lastHeartRefill: Date.now(),
   gems: 500,
+  dailyGoal: 'relaxed',
+  dailyXP: 0,
+  notifications: [],
   uiPrefs: {
     showAI: true,
     theme: 'dark',
     language: 'fr'
   },
+  aiChatHistory: [], // New: Persist AI chat history
   _sig: '', // Integrity signature
 };
 
@@ -60,6 +65,16 @@ function calculateSignature(state) {
   }
   return btoa(hash.toString());
 }
+
+async function hashPassword(password) {
+  if (!password) return '';
+  const msgUint8 = new TextEncoder().encode(password);
+  const hashBuffer = await crypto.subtle.digest('SHA-256', msgUint8);
+  const hashArray = Array.from(new Uint8Array(hashBuffer));
+  const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+  return hashHex;
+}
+window.hashPassword = hashPassword;
 
 // ── State ──────────────────────────────────────────────────
 let AppState = {};
@@ -126,9 +141,21 @@ function updateStreak() {
 
   if (last === yesterday.toDateString()) {
     AppState.streakDays += 1;
+    addNotification({
+      title: 'Bon retour ! 🔥',
+      message: `Ta série de ${AppState.streakDays} jours continue. Prêt pour une nouvelle leçon ?`,
+      icon: '⚡'
+    });
   } else {
     AppState.streakDays = 1;
+    addNotification({
+      title: 'C\'est reparti ! 🚀',
+      message: 'Commence une nouvelle série aujourd\'hui et atteins tes objectifs !',
+      icon: '🎯'
+    });
   }
+
+  AppState.dailyXP = 0; // Reset daily progress
   AppState.lastActiveDate = today;
   saveState();
 }
@@ -152,8 +179,28 @@ function checkHearts() {
 
 function addXP(amount) {
   const prevLevel = getLevel(AppState.totalXP).level;
+  
+  // Track daily progress
+  const prevDailyXP = AppState.dailyXP || 0;
+  AppState.dailyXP = prevDailyXP + amount;
   AppState.totalXP += amount;
+  
   const newLevel = getLevel(AppState.totalXP).level;
+  
+  // Check Goal Completion
+  const goals = { relaxed: 5, regular: 15, serious: 30, insane: 50 };
+  const target = goals[AppState.dailyGoal] || 5;
+  
+  if (prevDailyXP < target && AppState.dailyXP >= target) {
+    if (typeof addNotification === 'function') {
+      addNotification({
+        title: 'Objectif atteint ! 🎯',
+        message: `Félicitations ! Tu as atteint ton objectif quotidien de ${target} XP. Continue comme ça !`,
+        icon: '🏆'
+      });
+    }
+  }
+
   saveState();
   return { leveledUp: newLevel > prevLevel, newLevel };
 }
@@ -191,12 +238,15 @@ window.addXP = addXP;
 window.completeLesson = completeLesson;
 
 // ── Router ─────────────────────────────────────────────────
-const routes = {
+window.routes = {
   '#home':        () => renderHome(),
   '#courses':     () => renderCourses(),
   '#leaderboard': () => renderLeaderboard(),
   '#profile':     () => renderProfile(),
   '#auth':        () => renderAuth(),
+  '#playground':  () => renderSandbox(),
+  '#reference':   () => renderReference(),
+  '#lesson':      () => renderLessonRoute(),
 };
 
 function navigate(hash) {
@@ -210,6 +260,11 @@ function handleRoute() {
   if (!AppState.isLoggedIn && hash !== '#auth') {
     navigate('#auth');
     return;
+  }
+  
+  // Cleanup lesson UI if leaving lesson
+  if (hash !== '#lesson' && typeof window.removeLessonFooter === 'function') {
+    window.removeLessonFooter();
   }
   
   document.querySelectorAll('.nav-item').forEach(item => {
@@ -235,7 +290,7 @@ function handleRoute() {
     // Wait a brief moment to show the gamified loader, then render the actual route
     setTimeout(() => {
       main.classList.remove('page-enter');
-      const render = routes[hash] || routes['#home'];
+      const render = window.routes[hash] || window.routes['#home'];
       render();
       main.classList.add('page-enter');
       setTimeout(() => main.classList.remove('page-enter'), 300);
@@ -299,7 +354,16 @@ function cycleLang() {
   const idx = window.LANGUAGES.findIndex(l => l.id === currentLang);
   const next = window.LANGUAGES[(idx + 1) % window.LANGUAGES.length];
   setLang(next.id);
-  location.reload(); // Quickest way to re-render all JS components with new language
+  
+  // Dynamic UI Update instead of location.reload()
+  translateStaticUI();
+  
+  // Re-run current route renderer if possible
+  const hash = window.location.hash || '#home';
+  if (hash !== '#lesson') { // Don't interrupt lessons
+    const render = window.routes[hash] || window.routes['#home'];
+    if (typeof render === 'function') render();
+  }
 }
 
 window.cycleLang = cycleLang;
@@ -328,12 +392,146 @@ window.setThemeFromProfile = setThemeFromProfile;
 
 window.cycleTheme = cycleTheme;
 
+// ── UI Utilities ──────────────────────────────────────────
+function showModal({ icon = '⚠️', title = 'Attention', message = '...', confirmText = 'OK', cancelText = 'Annuler', onConfirm = null }) {
+  const overlay = document.getElementById('modal-overlay');
+  const iconEl = document.getElementById('modal-icon');
+  const titleEl = document.getElementById('modal-title');
+  const msgEl = document.getElementById('modal-message');
+  const confirmBtn = document.getElementById('modal-confirm-btn');
+  const cancelBtn = document.getElementById('modal-cancel-btn');
+
+  if (!overlay) return;
+
+  iconEl.textContent = icon;
+  titleEl.textContent = title;
+  msgEl.textContent = message;
+  confirmBtn.textContent = confirmText;
+  cancelBtn.textContent = cancelText;
+
+  cancelBtn.style.display = onConfirm ? 'block' : 'none';
+
+  overlay.classList.add('active');
+
+  const close = () => overlay.classList.remove('active');
+
+  confirmBtn.onclick = () => { close(); if (onConfirm) onConfirm(); };
+  cancelBtn.onclick = close;
+  overlay.onclick = (e) => { if (e.target === overlay) close(); };
+}
+
+function updateOnlineStatus() {
+  const banner = document.getElementById('offline-banner');
+  if (!banner) return;
+  if (navigator.onLine) {
+    banner.classList.remove('active');
+  } else {
+    banner.classList.add('active');
+  }
+}
+
+window.showModal = showModal;
+
+// ── Notifications ──────────────────────────────────────────
+function toggleNotifications() {
+  const dropdown = document.getElementById('notification-dropdown');
+  const badge = document.getElementById('notification-badge');
+  
+  if (dropdown.classList.contains('hidden')) {
+    dropdown.classList.remove('hidden');
+    badge.classList.add('hidden'); // Clear badge on open
+    renderNotifList();
+    
+    // Auto-close on outside click
+    const closeOnOutside = (e) => {
+      if (!e.target.closest('.notification-bell-wrapper')) {
+        dropdown.classList.add('hidden');
+        document.removeEventListener('click', closeOnOutside);
+      }
+    };
+    setTimeout(() => document.addEventListener('click', closeOnOutside), 10);
+  } else {
+    dropdown.classList.add('hidden');
+  }
+}
+
+function addNotification(notif) {
+  // notif: { id, title, message, icon, time, unread: true }
+  const state = AppState;
+  state.notifications = state.notifications || [];
+  
+  // Prevent duplicate notifications for same ID (if any)
+  if (notif.id && state.notifications.some(n => n.id === notif.id)) return;
+
+  state.notifications.unshift({
+    id: Date.now(),
+    time: 'À l\'instant',
+    unread: true,
+    ...notif
+  });
+  if (state.notifications.length > 10) state.notifications.pop();
+  
+  saveState();
+  updateNotifBadge();
+}
+
+function updateNotifBadge() {
+  const badge = document.getElementById('notification-badge');
+  if (!badge) return;
+  const unreadCount = (AppState.notifications || []).filter(n => n.unread).length;
+  if (unreadCount > 0) {
+    badge.classList.remove('hidden');
+  } else {
+    badge.classList.add('hidden');
+  }
+}
+
+function renderNotifList() {
+  const list = document.getElementById('notif-list');
+  if (!list) return;
+  const notifs = AppState.notifications || [];
+  
+  if (notifs.length === 0) {
+    list.innerHTML = `<div class="notif-empty">Aucune nouvelle notification</div>`;
+    return;
+  }
+  
+  list.innerHTML = notifs.map(n => `
+    <div class="notif-item ${n.unread ? 'unread' : ''}" onclick="markNotifRead(${n.id})">
+      <div class="notif-icon">${n.icon || '📢'}</div>
+      <div class="notif-content">
+        <div class="notif-title">${n.title}</div>
+        <div class="notif-message">${n.message}</div>
+        <div class="notif-time">${n.time}</div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function markNotifRead(id) {
+  const notif = AppState.notifications.find(n => n.id === id);
+  if (notif) notif.unread = false;
+  saveState();
+  renderNotifList();
+  updateNotifBadge();
+}
+
+window.toggleNotifications = toggleNotifications;
+window.addNotification = addNotification;
+window.markNotifRead = markNotifRead;
+window.updateNotifBadge = updateNotifBadge;
+
 // ── Bootstrap ──────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', () => {
   loadLang();
   translateStaticUI();
   loadTheme();
   loadState();
+
+  window.addEventListener('online', updateOnlineStatus);
+  window.addEventListener('offline', updateOnlineStatus);
+  updateOnlineStatus();
+
   window.addEventListener('hashchange', handleRoute);
   handleRoute();
   setupNav();

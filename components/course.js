@@ -76,14 +76,13 @@ function renderSkillTree(courseId) {
     }
 
     html += `
-    html += \`
     <div class="unit-block">
-      <div class="premium-unit-card" style="background: \${unit.color}">
+      <div class="premium-unit-card" style="background: ${unit.color}">
         <div class="p-unit-info">
-          <div class="p-unit-num">\${t('unit_label')} \${unitIdx + 1}</div>
-          <div class="p-unit-title">\${escHtml(unit.title)}</div>
+          <div class="p-unit-num">${t('unit_label')} ${unitIdx + 1}</div>
+          <div class="p-unit-title">${escHtml(unit.title)}</div>
         </div>
-        <div class="p-unit-badge">\${unit.icon}</div>
+        <div class="p-unit-badge">${unit.icon}</div>
       </div>
       <div class="lessons-grid">
         ${unit.lessons.map(lesson => {

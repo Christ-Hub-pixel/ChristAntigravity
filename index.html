@@ -5,8 +5,14 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>CodeLingo — Learn to Code!</title>
-  <meta name="description"
-    content="Master Python, JavaScript and more in a gamified, Duolingo-style experience. Earn XP, collect gems, and unlock badges — one lesson at a time." />
+  <!-- SEO & Social Meta Tags -->
+  <meta name="description" content="Apprenez à coder gratuitement avec CodeLingo. Des leçons interactives, un playground Python/JS et un tuteur IA pour progresser comme sur Mimo ou Duolingo." />
+  <meta name="keywords" content="apprendre code, python, javascript, tutoriel, programmation, codelingo, mimo, duolingo code" />
+  <meta property="og:title" content="CodeLingo — Apprenez à coder en vous amusant !" />
+  <meta property="og:description" content="Maîtrisez le développement web et la data science avec nos leçons gamifiées." />
+  <meta property="og:image" content="https://codelingo.app/assets/og-image.png" />
+  <meta property="og:url" content="https://codelingo.app" />
+  <meta name="twitter:card" content="summary_large_image" />
 
   <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -29,6 +35,23 @@
 </head>
 
 <body>
+  <!-- Offline Indicator -->
+  <div id="offline-banner" class="offline-banner">
+    <span>📡</span> <span id="offline-text">Mode hors-ligne activé</span>
+  </div>
+
+  <!-- Custom Modal System -->
+  <div id="modal-overlay" class="modal-overlay">
+    <div id="modal-card" class="modal-card">
+      <div id="modal-icon" class="modal-icon">⚠️</div>
+      <div id="modal-title" class="modal-title">Attention</div>
+      <div id="modal-message" class="modal-message">Êtes-vous sûr ?</div>
+      <div class="modal-actions">
+        <button id="modal-cancel-btn" class="modal-btn modal-btn-cancel">Annuler</button>
+        <button id="modal-confirm-btn" class="modal-btn modal-btn-confirm">Confirmer</button>
+      </div>
+    </div>
+  </div>
 
   <div id="app-wrapper">
 
@@ -39,8 +62,8 @@
         <span>CodeLingo</span>
       </div>
       <div class="topbar-stats">
-        <div class="stat-pill hearts" title="Vies (Cœurs)">
-          <span class="stat-icon">❤️</span>
+        <div class="stat-item" title="${t('stat_hearts')}">
+          <span class="stat-icon icon-red">❤️</span>
           <span id="topbar-hearts">5</span>
         </div>
         <div class="stat-pill streak" title="Série de jours">
@@ -55,8 +78,19 @@
           <span class="stat-icon">⚡</span>
           <span id="topbar-xp">0</span>
         </div>
+        <div class="stat-item notification-bell-wrapper" onclick="toggleNotifications()" title="Notifications">
+          <span class="stat-icon topbar-stat-btn">🔔</span>
+          <span id="notification-badge" class="notification-badge hidden"></span>
+          <div id="notification-dropdown" class="notification-dropdown hidden">
+            <div class="notif-header">Notifications</div>
+            <div id="notif-list" class="notif-list">
+              <!-- Dynamically populated -->
+              <div class="notif-empty">Aucune nouvelle notification</div>
+            </div>
+          </div>
+        </div>
         <div class="stat-item" onclick="toggleSettings()" title="Paramètres">
-          <span class="stat-icon" style="font-size:1.2rem;">⚙️</span>
+          <span class="stat-icon topbar-stat-btn">⚙️</span>
         </div>
       </div>
     </header>
@@ -105,9 +139,28 @@
         <span class="nav-icon">🏆</span>
         <span class="nav-label" id="nav-lbl-rank">Rank</span>
       </div>
+      <div class="nav-item" data-route="#playground" id="nav-playground">
+        <span class="nav-icon">🧪</span>
+        <span class="nav-label" id="nav-lbl-playground">Playground</span>
+      </div>
+      <div class="nav-item" data-route="#reference" id="nav-reference">
+        <span class="nav-icon">📖</span>
+        <span class="nav-label" id="nav-lbl-reference">Reference</span>
+      </div>
+
       <div class="nav-item" data-route="#profile" id="nav-profile">
         <span class="nav-icon">👤</span>
         <span class="nav-label" id="nav-lbl-profile">Profile</span>
+      </div>
+
+      <!-- Quick Toggles (Desktop Sidebar) -->
+      <div class="sidebar-top-section" style="margin-top: auto; border-top: 2px solid var(--border); border-bottom: none; padding-top: 16px;">
+        <button class="icon-btn" onclick="cycleLang()" title="Change Language">
+          <span id="lang-flag">🇬🇧</span> <span id="lang-short">EN</span>
+        </button>
+        <button class="icon-btn" onclick="cycleTheme()" title="Toggle Theme">
+          <span id="theme-icon">🌙</span>
+        </button>
       </div>
     </nav>
 
@@ -121,22 +174,25 @@
   <div id="settings-panel-container" class="settings-panel-container" style="display:none;"></div>
 
   <!-- Data Layer -->
-  <script src="data/i18n.js"></script>
-  <script src="data/gamification.js"></script>
-  <script src="data/courses.js"></script>
-
-  <!-- App Core -->
-  <script src="app.js"></script>
+  <script src="./data/gamification.js"></script>
+  <script src="./data/i18n.js"></script>
+  <script src="./data/courses.js"></script>
+  <script src="./data/reference.js"></script>
 
   <!-- Components -->
-  <script src="components/auth.js"></script>
-  <script src="components/home.js"></script>
-  <script src="components/course.js"></script>
-  <script src="components/lesson.js"></script>
-  <script src="components/leaderboard.js"></script>
-  <script src="components/profile.js"></script>
-  <script src="components/ai.js"></script>
-  <script src="components/settings.js"></script>
+  <script src="./components/auth.js"></script>
+  <script src="./components/home.js"></script>
+  <script src="./components/course.js"></script>
+  <script src="./components/lesson.js"></script>
+  <script src="./components/leaderboard.js"></script>
+  <script src="./components/profile.js"></script>
+  <script src="./components/ai.js"></script>
+  <script src="./components/settings.js"></script>
+  <script src="./components/sandbox.js"></script>
+  <script src="./components/reference.js"></script>
+
+  <!-- Core -->
+  <script src="./app.js" defer></script>
 
   <!-- Service Worker Registration -->
   <script>

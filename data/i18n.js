@@ -18,6 +18,8 @@ const TRANSLATIONS = {
     nav_courses: 'Courses',
     nav_rank: 'Rank',
     nav_profile: 'Profile',
+    nav_playground: 'Playground',
+    nav_reference: 'Reference',
 
     // Topbar
     theme_dark: 'Dark',
@@ -67,6 +69,8 @@ const TRANSLATIONS = {
     check_btn: 'Check Answer ✓',
     hint_label: '💡 Hint:',
     correct_answer: 'Correct answer:',
+    correct_label: 'Correct',
+    wrong_label: 'Incorrect',
 
     // Lesson complete
     perfect_title: 'Perfect!',
@@ -132,6 +136,18 @@ const TRANSLATIONS = {
     auth_btn: 'Start Learning',
     xp_popup: '+{xp} XP',
     start_label: 'Start',
+
+    // AI Tutor
+    ai_welcome: "Hi! I'm Lingo AI. How can I help you with your coding journey today? 🤖",
+    ai_input_placeholder: "Type your question...",
+
+    // Daily Goals
+    pr_daily_goal: 'Daily Goal',
+    pr_goal_hint: 'Choose how much XP you want to earn each day.',
+    goal_relaxed: 'Relaxed',
+    goal_regular: 'Regular',
+    goal_serious: 'Serious',
+    goal_insane: 'Insane',
   },
 
   fr: {
@@ -139,6 +155,8 @@ const TRANSLATIONS = {
     nav_courses: 'Cours',
     nav_rank: 'Classement',
     nav_profile: 'Profil',
+    nav_playground: 'Playground',
+    nav_reference: 'Référence',
 
     theme_dark: 'Sombre',
     theme_light: 'Clair',
@@ -184,6 +202,8 @@ const TRANSLATIONS = {
     check_btn: 'Vérifier la réponse ✓',
     hint_label: '💡 Indice :',
     correct_answer: 'Réponse correcte :',
+    correct_label: 'Excellent !',
+    wrong_label: 'C\'est faux',
 
     perfect_title: 'Parfait !',
     complete_title: 'Leçon',
@@ -246,6 +266,18 @@ const TRANSLATIONS = {
     auth_btn: 'Commencer',
     xp_popup: '+{xp} XP',
     start_label: 'C\'est parti',
+
+    // AI Tutor
+    ai_welcome: "Salut ! Je suis Lingo AI. Comment puis-je t'aider dans ton apprentissage aujourd'hui ? 🤖",
+    ai_input_placeholder: "Pose ta question...",
+
+    // Daily Goals
+    pr_daily_goal: 'Objectif quotidien',
+    pr_goal_hint: 'Choisis combien d\'XP tu veux gagner chaque jour.',
+    goal_relaxed: 'Détendu',
+    goal_regular: 'Régulier',
+    goal_serious: 'Sérieux',
+    goal_insane: 'Intense',
   },
 
   es: {
@@ -253,6 +285,8 @@ const TRANSLATIONS = {
     nav_courses: 'Cursos',
     nav_rank: 'Ranking',
     nav_profile: 'Perfil',
+    nav_playground: 'Playground',
+    nav_reference: 'Referencia',
 
     theme_dark: 'Oscuro',
     theme_light: 'Claro',
@@ -297,6 +331,8 @@ const TRANSLATIONS = {
     check_btn: 'Verificar respuesta ✓',
     hint_label: '💡 Pista:',
     correct_answer: 'Respuesta correcta:',
+    correct_label: '¡Excelente!',
+    wrong_label: 'Muy mal',
 
     perfect_title: '¡Perfecto!',
     complete_title: 'Lección',
@@ -359,6 +395,10 @@ const TRANSLATIONS = {
     auth_btn: 'Empezar a aprender',
     xp_popup: '+{xp} XP',
     start_label: 'Empezar',
+
+    // AI Tutor
+    ai_welcome: "¡Hola! Soy Lingo AI. ¿Cómo puedo ayudarte con tu aprendizaje de código hoy? 🤖",
+    ai_input_placeholder: "Escribe tu pregunta...",
   },
 
   de: {
@@ -366,6 +406,8 @@ const TRANSLATIONS = {
     nav_courses: 'Kurse',
     nav_rank: 'Rangliste',
     nav_profile: 'Profil',
+    nav_playground: 'Playground',
+    nav_reference: 'Referenz',
 
     theme_dark: 'Dunkel',
     theme_light: 'Hell',
@@ -410,6 +452,8 @@ const TRANSLATIONS = {
     check_btn: 'Antwort prüfen ✓',
     hint_label: '💡 Hinweis:',
     correct_answer: 'Richtige Antwort:',
+    correct_label: 'Richtig!',
+    wrong_label: 'Falsch',
 
     perfect_title: 'Perfekt!',
     complete_title: 'Lektion',
@@ -472,6 +516,10 @@ const TRANSLATIONS = {
     auth_btn: 'Lernen beginnen',
     xp_popup: '+{xp} XP',
     start_label: 'Starten',
+
+    // AI Tutor
+    ai_welcome: "Hallo! Ich bin Lingo AI. Wie kann ich dir heute bei deinem Programmier-Abenteuer helfen? 🤖",
+    ai_input_placeholder: "Schreibe deine Frage...",
   },
 
   pt: {
@@ -523,6 +571,8 @@ const TRANSLATIONS = {
     check_btn: 'Verificar resposta ✓',
     hint_label: '💡 Dica:',
     correct_answer: 'Resposta correta:',
+    correct_label: 'Correto!',
+    wrong_label: 'Incorreto',
 
     perfect_title: 'Perfeito!',
     complete_title: 'Lição',
@@ -585,6 +635,10 @@ const TRANSLATIONS = {
     auth_btn: 'Começar a aprender',
     xp_popup: '+{xp} XP',
     start_label: 'Começar',
+
+    // AI Tutor
+    ai_welcome: "Olá! Sou o Lingo AI. Como posso te ajudar na sua jornada de programação hoje? 🤖",
+    ai_input_placeholder: "Digite sua pergunta...",
   },
 };
 

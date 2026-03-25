@@ -1,4 +1,4 @@
-const CACHE_NAME = 'codelingo-v1.1.2';
+const CACHE_NAME = 'codelingo-v1.2.0';
 const ASSETS = [
   './',
   './index.html',
@@ -6,15 +6,19 @@ const ASSETS = [
   './app.js',
   './assets/icon.png',
   './data/i18n.js',
-  './data/gamification.js',
   './data/courses.js',
+  './data/reference.js',
   './components/auth.js',
   './components/home.js',
   './components/course.js',
   './components/lesson.js',
   './components/leaderboard.js',
   './components/profile.js',
-  './components/ai.js'
+  './components/ai.js',
+  './components/settings.js',
+  './components/sandbox.js',
+  './components/reference.js',
+  './manifest.json'
 ];
 
 // Install: Cache all critical assets
@@ -45,14 +49,16 @@ self.addEventListener('activate', (event) => {
   return self.clients.claim();
 });
 
-// Fetch: Cache-First strategy with Network Fallback
+// Fetch: Stale-While-Revalidate strategy
 self.addEventListener('fetch', (event) => {
   event.respondWith(
-    caches.match(event.request).then((response) => {
-      // Use cached version if available, else fetch from network
-      return response || fetch(event.request).catch(() => {
-        // If both fail (offline and not in cache), return custom offline response or nothing
-        return caches.match('./index.html');
+    caches.open(CACHE_NAME).then((cache) => {
+      return cache.match(event.request).then((cachedResponse) => {
+        const fetchPromise = fetch(event.request).then((networkResponse) => {
+          cache.put(event.request, networkResponse.clone());
+          return networkResponse;
+        });
+        return cachedResponse || fetchPromise;
       });
     })
   );

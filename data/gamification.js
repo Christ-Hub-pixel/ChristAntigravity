@@ -212,6 +212,20 @@ function checkNewBadges(state) {
   return newBadges;
 }
 
+/**
+ * Determines if a lesson is the "next" logical step for the user.
+ * A lesson is available if it's already completed, OR if it's the 
+ * first uncompleted lesson in its unit, OR if its predecessor is done.
+ */
+function isNextAvailable(course, lessonId, completedLessons) {
+  if (!course || !lessonId) return false;
+  const allLessons = course.units.flatMap(u => u.lessons);
+  const idx = allLessons.findIndex(l => l.id === lessonId);
+  if (idx === -1) return false;
+  if (idx === 0) return true; // First lesson always available
+  return completedLessons.includes(allLessons[idx - 1].id);
+}
+
 function getDailyMessage() {
   const idx = new Date().getDate() % DAILY_MESSAGES.length;
   return DAILY_MESSAGES[idx];
@@ -231,6 +245,7 @@ window.LEADERBOARD_USERS = LEADERBOARD_USERS;
 window.getLevel = getLevel;
 window.getXPProgress = getXPProgress;
 window.checkNewBadges = checkNewBadges;
+window.isNextAvailable = isNextAvailable;
 window.getDailyMessage = getDailyMessage;
 window.getCorrectMessage = getCorrectMessage;
 window.getWrongMessage = getWrongMessage;

@@ -138,6 +138,28 @@ function renderProfile() {
       </div>
     </div>
 
+    <!-- Daily Goals (Mimo Style) -->
+    <div class="section-header"><span class="section-title">🎯 ${t('pr_daily_goal')}</span></div>
+    <div class="card mb-20">
+      <div style="font-size:0.82rem;color:var(--text-secondary);margin-bottom:12px;">${t('pr_goal_hint')}</div>
+      <div class="goal-picker">
+        ${[
+          {id:'relaxed',xp:5,label:t('goal_relaxed')},
+          {id:'regular',xp:15,label:t('goal_regular')},
+          {id:'serious',xp:30,label:t('goal_serious')},
+          {id:'insane',xp:50,label:t('goal_insane')}
+        ].map(goal => `
+          <div class="goal-option ${state.dailyGoal === goal.id ? 'active' : ''}" onclick="setDailyGoal('${goal.id}')">
+            <div class="goal-info">
+              <span class="goal-label">${goal.label}</span>
+              <span class="goal-xp">${goal.xp} XP / jour</span>
+            </div>
+            <div class="goal-check">${state.dailyGoal === goal.id ? '✅' : ''}</div>
+          </div>
+        `).join('')}
+      </div>
+    </div>
+
     <!-- Account -->
     <div class="section-header"><span class="section-title">${t('pr_account')}</span></div>
     <div class="card mb-20">
@@ -234,10 +256,17 @@ function changeUsername() {
 }
 
 function confirmReset() {
-  if (confirm(t('pr_reset_confirm'))) {
-    localStorage.removeItem('codelingo_state');
-    location.reload();
-  }
+  showModal({
+    icon: '🗑️',
+    title: t('pr_reset'),
+    message: t('pr_reset_confirm'),
+    confirmText: 'Réinitialiser',
+    cancelText: 'Annuler',
+    onConfirm: () => {
+      localStorage.removeItem('codelingo_state');
+      location.reload();
+    }
+  });
 }
 
 function changeAvatar(avatar) {
@@ -261,8 +290,29 @@ function toggleAvatarPicker() {
   panel.style.display = isOpen ? 'none' : 'block';
 }
 
+function setDailyGoal(goalId) {
+  AppState.dailyGoal = goalId;
+  saveState();
+  renderProfile();
+  
+  // Show encouraging modal
+  const goal = [
+    {id:'relaxed',xp:5,label:t('goal_relaxed')},
+    {id:'regular',xp:15,label:t('goal_regular')},
+    {id:'serious',xp:30,label:t('goal_serious')},
+    {id:'insane',xp:50,label:t('goal_insane')}
+  ].find(g => g.id === goalId);
+  
+  showModal({
+    icon: '🎯',
+    title: 'Objectif mis à jour',
+    message: `Ton nouvel objectif est "${goal.label}" (${goal.xp} XP par jour). Tu peux le faire !`
+  });
+}
+
 window.renderProfile    = renderProfile;
 window.changeUsername   = changeUsername;
 window.confirmReset     = confirmReset;
 window.changeAvatar     = changeAvatar;
 window.toggleAvatarPicker = toggleAvatarPicker;
+window.setDailyGoal     = setDailyGoal;

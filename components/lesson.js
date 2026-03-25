@@ -10,6 +10,7 @@ let lessonState = {
   mistakes: 0,
   answered: false,
   selectedOption: null,
+  mode: 'tutorial', // 'tutorial' or 'exercise'
 };
 
 function startLesson(courseId, lessonId) {
@@ -22,9 +23,123 @@ function startLesson(courseId, lessonId) {
   const lesson = course?.units.flatMap(u => u.lessons).find(l => l.id === lessonId);
   if (!lesson) return;
 
-  lessonState = { courseId, lessonId, lesson, exerciseIdx: 0, mistakes: 0, answered: false, selectedOption: null };
-  renderExercise();
+  // If lesson has content, start in tutorial mode, else exercise mode
+  const mode = lesson.content ? 'tutorial' : 'exercise';
+
+  lessonState = { courseId, lessonId, lesson, exerciseIdx: 0, mistakes: 0, answered: false, selectedOption: null, mode };
   window.location.hash = '#lesson';
+  
+  if (mode === 'tutorial') {
+    renderTutorial();
+  } else {
+    renderExercise();
+  }
+}
+
+function renderTutorial() {
+  const { lesson } = lessonState;
+  const main = document.getElementById('app-main');
+  
+  let content = lesson.content;
+  // Replace [[TRY:code]] with interactive code blocks
+  content = content.replace(/\[\[TRY:([\s\S]*?)\]\]/g, (match, code) => {
+    return renderCodeBlock(code, 'tutorial');
+  });
+
+  main.innerHTML = `
+    <div class="tutorial-container">
+      <div class="tutorial-header">
+        <div class="exercise-close" onclick="quitLesson()">✕</div>
+        <div class="tutorial-title">${lesson.title}</div>
+      </div>
+      
+      <div class="tutorial-body">
+        ${content}
+      </div>
+      
+      <div class="tutorial-footer-spacer"></div>
+    </div>
+  `;
+
+  // Inject sticky footer for tutorial
+  let footer = document.getElementById('lesson-footer');
+  if (!footer) {
+    footer = document.createElement('div');
+    footer.id = 'lesson-footer';
+    footer.className = 'lesson-footer';
+    document.body.appendChild(footer);
+  }
+  footer.innerHTML = `
+    <button class="btn btn-primary btn-full btn-lg" onclick="endTutorial()">
+      ${t('continue_btn') || 'CONTINUER →'}
+    </button>
+  `;
+}
+
+function endTutorial() {
+  lessonState.mode = 'exercise';
+  renderExercise();
+}
+
+function renderLessonRoute() {
+  if (!lessonState.lesson) return navigate('#home');
+  
+  if (lessonState.mode === 'tutorial') {
+    renderTutorial();
+  } else {
+    renderExercise();
+  }
+}
+
+function useHint() {
+  if (AppState.gems < 10) {
+    showModal({
+      icon: '💎',
+      title: 'Besoin de gemmes',
+      message: 'Il vous faut 10 gemmes pour obtenir un indice !'
+    });
+    return;
+  }
+
+  const { lesson, exerciseIdx } = lessonState;
+  const exercise = lesson.exercises[exerciseIdx];
+  const hintBtn = document.getElementById('hint-btn');
+
+  // Deduct gems
+  AppState.gems -= 10;
+  saveState();
+  updateTopbar();
+  if (window.updateNotifBadge) window.updateNotifBadge();
+  
+  hintBtn.disabled = true;
+  hintBtn.innerHTML = '✨ Indice activé';
+
+  if (exercise.type === 'mcq' || exercise.type === 'output') {
+    // Remove one wrong answer
+    const buttons = document.querySelectorAll('.option-btn');
+    let removedCount = 0;
+    buttons.forEach(btn => {
+      const isCorrect = btn.dataset.index == exercise.answer;
+      if (!isCorrect && !btn.classList.contains('wrong-disabled') && removedCount < 2) {
+        btn.classList.add('wrong-disabled');
+        btn.onclick = null;
+        btn.style.opacity = '0.3';
+        btn.style.pointerEvents = 'none';
+        removedCount++;
+      }
+    });
+  } else if (exercise.type === 'fill') {
+    // Reveal first word or character
+    const input = document.getElementById('fill-answer');
+    if (input) {
+      input.placeholder = `Indice: commence par "${exercise.answer.substring(0, 1)}..."`;
+      input.value = exercise.answer.substring(0, 1);
+      input.focus();
+      // Enable check button if needed
+      const checkBtn = document.getElementById('check-btn');
+      if (checkBtn) checkBtn.disabled = false;
+    }
+  }
 }
 
 function renderExercise() {
@@ -67,7 +182,12 @@ function renderExercise() {
 
     <!-- Question Card -->
     <div class="question-card">
-      ${typeBadge}
+      <div class="question-header">
+        ${typeBadge}
+        <button id="hint-btn" class="hint-btn" onclick="useHint()" title="Obtenir un indice (10 💎)">
+          💡 Indice (10)
+        </button>
+      </div>
       <div class="question-text">${escHtml(exercise.question)}</div>
       ${exercise.code ? renderCodeBlock(exercise.code, exercise.type) : ''}
     </div>
@@ -114,16 +234,36 @@ function renderExercise() {
 }
 
 function renderCodeBlock(code, type) {
+  const isTutorial = lessonState.mode === 'tutorial';
+  const lang = lessonState.courseId === 'python' ? 'python' : 'javascript';
+  
+  if (isTutorial) {
+    const highlighted = highlightCode(code, lessonState.courseId);
+    return `
+      <div class="tutorial-try-wrap">
+        <div class="tutorial-try-header">
+          <span>EXEMPLE ${lang.toUpperCase()}</span>
+          <button class="tutorial-try-btn-small" onclick="openSandboxWithCode('${btoa(code)}', '${lang}')">
+            Essayer soi-même
+          </button>
+        </div>
+        <div class="tutorial-try-body">
+          <pre class="code-block hljs"><code>${highlighted}</code></pre>
+        </div>
+      </div>
+    `;
+  }
+
+  // For non-tutorial mode (exercise mode)
   if (type === 'fill') {
-    // Replace ___ with a highlighted blank span
-    const highlighted = highlightCode(code).replace('___', '<span class="code-blank">___</span>');
+    const highlighted = highlightCode(code, lessonState.courseId).replace('___', '<span class="code-blank">___</span>');
     return `<div class="code-snippet notranslate" translate="no">${highlighted}</div>`;
   }
-  return `<div class="code-snippet notranslate" translate="no">${highlightCode(code)}</div>`;
+  return `<div class="code-snippet notranslate" translate="no">${highlightCode(code, lessonState.courseId)}</div>`;
 }
 
-function highlightCode(code) {
-  // Safe multi-pass regex highlighting using placeholders to avoid HTML injection conflicts
+function highlightCode(code, lang) {
+  // Safe multi-pass regex highlighting using placeholders
   let hl = escHtml(code);
   
   // 1. Comments
@@ -132,11 +272,11 @@ function highlightCode(code) {
   // 2. Strings
   hl = hl.replace(/"([^"]*)"|'([^']*)'/g, 'XX_S_S_XX$&XX_END_XX');
   // 3. Keywords
-  hl = hl.replace(/\b(def|return|for|in|if|else|elif|while|import|from|class|print|True|False|None|and|or|not|const|let|var|function|async|await|new|this|typeof|console|document)\b/g, 'XX_K_S_XX$1XX_END_XX');
-  // 4. Numbers (avoiding inside strings/already matched stuff by relying on word boundaries)
+  hl = hl.replace(/\b(def|return|for|in|if|else|elif|while|import|from|class|print|True|False|None|and|or|not|const|let|var|function|async|await|new|this|typeof|console|document|window|try|catch|finally|break|continue|yield|lambda|with|as|pass|assert|del|global|nonlocal|range|len|list|dict|set|tuple|str|int|float|bool)\b/g, 'XX_K_S_XX$1XX_END_XX');
+  // 4. Numbers
   hl = hl.replace(/\b(\d+\.?\d*)\b/g, 'XX_N_S_XX$1XX_END_XX');
 
-  // Replace placeholders with actual HTML spans
+  // Replace placeholders
   return hl
     .replace(/XX_C_S_XX/g, '<span class="code-comment">')
     .replace(/XX_S_S_XX/g, '<span class="code-string">')
@@ -523,10 +663,12 @@ function triggerConfetti() {
 }
 
 // Register route
-routes['#lesson'] = () => {
-  if (!lessonState.lesson) navigate('#courses');
-};
+window.renderLessonRoute = renderLessonRoute;
+if (window.routes) {
+  window.routes['#lesson'] = renderLessonRoute;
+}
 
+window.removeLessonFooter = removeLessonFooter;
 window.startLesson = startLesson;
 window.checkAnswer = checkAnswer;
 window.selectOption = selectOption;

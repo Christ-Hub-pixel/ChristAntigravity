@@ -68,17 +68,27 @@ function pickAvatar(avatar) {
   });
 }
 
-function handleAuthStep1(e) {
+async function handleAuthStep1(e) {
   e.preventDefault();
   const username = document.getElementById('auth-username').value.trim();
+  const password = document.getElementById('auth-password').value.trim();
   const nameRegex = /^[a-zA-Z0-9_]{3,20}$/;
   if (!nameRegex.test(username)) {
-    alert('Nom invalide — 3 à 20 caractères (lettres, chiffres, _).');
+    showModal({ icon: '👤', title: 'Nom invalide', message: '3 à 20 caractères (lettres, chiffres, _).' });
     return;
   }
+  if (password.length < 6) {
+    showModal({ icon: '🔑', title: 'Mot de passe', message: '6 caractères minimum pour votre sécurité.' });
+    return;
+  }
+  // Hash the password before saving
+  const hashedPassword = await hashPassword(password);
+  
   // Save temporarily (not logged in yet)
   AppState.username = username;
   AppState.avatar   = selectedAvatar;
+  AppState.password = hashedPassword; 
+  
   // Go to step 2 — language selection
   renderLangPicker();
 }

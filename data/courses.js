@@ -23,6 +23,13 @@ const COURSES = {
             title: 'Votre Premier Programme',
             icon: '👋',
             xpReward: 10,
+            content: `
+              <p>Python est un langage de programmation populaire. Il est utilisé pour le développement web, l'analyse de données, l'intelligence artificielle et plus encore.</p>
+              <h3>La fonction print()</h3>
+              <p>La fonction <code>print()</code> est utilisée pour afficher du texte sur votre écran. C'est souvent la première chose que l'on apprend !</p>
+              [[TRY:print("Hello, World!")]]
+              <p>Regardez l'exemple ci-dessus. Tout ce qui se trouve entre les parenthèses et les guillemets sera affiché.</p>
+            `,
             exercises: [
               {
                 type: 'mcq',
@@ -61,6 +68,13 @@ const COURSES = {
             title: 'Commentaires et Style',
             icon: '💬',
             xpReward: 10,
+            content: `
+              <p>Les commentaires sont essentiels pour expliquer ce que fait votre code. Ils sont ignorés par l'ordinateur.</p>
+              <h3>Utiliser le symbole #</h3>
+              <p>En Python, tout ce qui suit le symbole <code>#</code> est considéré comme un commentaire.</p>
+              [[TRY:# Ceci est un commentaire\nprint("Le code continue !")]]
+              <p>Vous pouvez aussi mettre des commentaires à la fin d'une ligne de code.</p>
+            `,
             exercises: [
               {
                 type: 'mcq',
