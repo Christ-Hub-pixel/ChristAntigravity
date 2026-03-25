@@ -23,6 +23,7 @@ const TRANSLATIONS = {
     theme_dark: 'Dark',
     theme_light: 'Light',
     theme_auto: 'Auto',
+    settings_title: 'Quick Settings',
 
     // Home page
     welcome_back: 'Welcome back!',
@@ -142,6 +143,7 @@ const TRANSLATIONS = {
     theme_dark: 'Sombre',
     theme_light: 'Clair',
     theme_auto: 'Auto',
+    settings_title: 'Paramètres Rapides',
 
     welcome_back: 'Bon retour !',
     hello: 'Bonjour,',
