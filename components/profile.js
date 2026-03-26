@@ -28,224 +28,163 @@ function renderProfile() {
   const jsTotal = COURSES.javascript.units.reduce((a, u) => a + u.lessons.length, 0);
 
   document.getElementById('app-main').innerHTML = `
-    <!-- Profile Hero -->
-    <div class="profile-hero">
-      <div class="profile-avatar" onclick="toggleAvatarPicker()" title="Changer d'avatar" style="cursor:pointer;position:relative;">
-        <span id="profile-avatar-display" style="font-size:3.5rem;transition:transform 0.2s ease;display:block;">${state.avatar}</span>
-        <div style="position:absolute;bottom:-4px;right:-4px;background:var(--accent-blue);border-radius:50%;width:22px;height:22px;display:flex;align-items:center;justify-content:center;font-size:0.65rem;border:2px solid var(--bg-primary);">✏️</div>
-      </div>
-      <div>
-        <div class="profile-name">${escHtml(state.username)}</div>
-        <div class="profile-level-name">${t('level_prefix')} ${level.level} · ${escHtml(level.name)}</div>
-        <div class="profile-xp-section">
-          <div class="profile-xp-label">
+    <div class="profile-v2-container">
+      <!-- Profile Hero v2 -->
+      <div class="profile-v2-hero">
+        <div class="avatar-ring-container" onclick="toggleAvatarPicker()">
+          <div class="level-ring" style="--p: ${xpProgress}%"></div>
+          <div class="avatar-v2-display" id="profile-avatar-display">${state.avatar}</div>
+          <div style="position:absolute;bottom:0px;right:0px;background:var(--accent-blue);border-radius:50%;width:32px;height:32px;display:flex;align-items:center;justify-content:center;font-size:1rem;border:3.5px solid white;z-index:10;box-shadow:0 3px 6px rgba(0,0,0,0.2);">✏️</div>
+        </div>
+        <div class="profile-v2-name">${escHtml(state.username)}</div>
+        <div class="profile-v2-meta">
+          ${t('level_prefix')} ${level.level} — ${escHtml(level.name)}
+        </div>
+        
+        <div style="margin-top:20px;max-width:320px;margin-left:auto;margin-right:auto;">
+          <div style="display:flex;justify-content:space-between;font-size:0.75rem;font-weight:900;margin-bottom:6px;">
             <span>${state.totalXP} XP</span>
-            <span>${nextLevel ? `${nextLevel.minXP - state.totalXP} ${t('xp_to_next')} ${t('level_prefix')} ${nextLevel.level}` : t('max_level')}</span>
+            <span>${nextLevel ? `${nextLevel.minXP - state.totalXP} ${t('xp_to_next')}` : t('max_level')}</span>
           </div>
-          <div class="progress-bar-track">
-            <div class="progress-bar-fill" id="profile-xp-bar" style="width:0%;"></div>
+          <div class="progress-bar-track" style="height:10px;background:rgba(0,0,0,0.2);border:none;">
+            <div class="progress-bar-fill" id="profile-xp-bar" style="width:0%;background:var(--accent-yellow);box-shadow:0 0 10px rgba(255,214,0,0.4);"></div>
           </div>
         </div>
       </div>
-    </div>
 
-    <!-- Avatar Picker (hidden by default) -->
-    <div id="avatar-picker-panel" class="avatar-picker-panel" style="display:none;">
-      <div class="avatar-picker-header">Choisis ton avatar</div>
-      <div class="auth-avatar-grid">
-        ${(window.AVATARS || ['🧑‍💻','👨‍💻','👩‍💻','🐱','🐶','🦊','🐸','🐼','🦁','🐯','🚀','⚡','🎯','🔥','💎','🌟']).map(a => `
-          <button class="avatar-pick-btn ${a === state.avatar ? 'selected' : ''}" onclick="changeAvatar('${a}')">${a}</button>
-        `).join('')}
+      <!-- Avatar Picker Panel (glassy) -->
+      <div id="avatar-picker-panel" class="profile-glass-card mb-20" style="display:none;margin: -10px 15px 20px;">
+        <div class="avatar-picker-header" style="font-weight:900;margin-bottom:12px;text-align:center;">Choisis ton avatar</div>
+        <div class="auth-avatar-grid">
+          ${(window.AVATARS || ['🧑‍💻','👨‍💻','👩‍💻','🐱','🐶','🦊','🐸','🐼','🦁','🐯','🚀','⚡','🎯','🔥','💎','🌟']).map(a => `
+            <button class="avatar-pick-btn ${a === state.avatar ? 'selected' : ''}" onclick="changeAvatar('${a}')">${a}</button>
+          `).join('')}
+        </div>
       </div>
-    </div>
 
-    <!-- Stats Grid -->
-    <div class="stats-row mb-20">
-      <div class="stat-card">
-        <span class="s-icon">🔥</span>
-        <span class="s-val">${state.streakDays}</span>
-        <span class="s-lbl">${t('pr_streak')}</span>
+      <!-- Stats Grid v2 -->
+      <div class="stats-v2-grid">
+        <div class="stat-v2-card">
+          <span class="stat-v2-icon">🔥</span>
+          <span class="stat-v2-val">${state.streakDays}</span>
+          <span class="stat-v2-lbl">${t('pr_streak')}</span>
+        </div>
+        <div class="stat-v2-card">
+          <span class="stat-v2-icon">🏅</span>
+          <span class="stat-v2-val">${state.earnedBadges.length}</span>
+          <span class="stat-v2-lbl">${t('pr_badges')}</span>
+        </div>
+        <div class="stat-v2-card">
+          <span class="stat-v2-icon">💎</span>
+          <span class="stat-v2-val">${state.perfectLessons}</span>
+          <span class="stat-v2-lbl">${t('pr_perfect')}</span>
+        </div>
       </div>
-      <div class="stat-card">
-        <span class="s-icon">🏅</span>
-        <span class="s-val">${state.earnedBadges.length}</span>
-        <span class="s-lbl">${t('pr_badges')}</span>
-      </div>
-      <div class="stat-card">
-        <span class="s-icon">💎</span>
-        <span class="s-val">${state.perfectLessons}</span>
-        <span class="s-lbl">${t('pr_perfect')}</span>
-      </div>
-    </div>
 
-    <!-- Language Progress -->
-    <div class="section-header"><span class="section-title">${t('pr_lang_progress')}</span></div>
-    <div class="card mb-20 profile-progress-grid">
-      ${Object.values(COURSES).map(course => {
-        // Map course IDs to their lesson ID prefixes
-        const prefixMap = { 'python': 'py-', 'javascript': 'js-', 'sql': 'sql-', 'html_css': 'hc-' };
-        const prefix = prefixMap[course.id] || course.id.substring(0, 2);
-        
-        const done = state.completedLessons.filter(id => id.startsWith(prefix)).length;
-        const total = course.units.reduce((a, u) => a + u.lessons.length, 0);
-        const percent = total ? Math.round((done / total) * 100) : 0;
-        
-        return `
-          <div class="profile-course-item">
-            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
-              <div style="display:flex;align-items:center;gap:8px;font-weight:700;font-size:0.9rem;">
-                <span class="p-course-icon">${course.icon}</span> ${course.name}
-              </div>
-              <span style="font-size:0.82rem;color:var(--text-secondary);font-weight:800;">${percent}%</span>
-            </div>
-            <div class="progress-bar-track" style="height:10px;">
-              <div class="progress-bar-fill" style="width:${percent}%;background:${course.color};"></div>
-            </div>
-            <div style="margin-top:4px;font-size:0.7rem;color:var(--text-muted);text-align:right;">
-              ${done} / ${total} ${t('lessons_label')}
-            </div>
-          </div>
-        `;
-      }).join('')}
-    </div>
-
-    <!-- Streak Calendar -->
-    <div class="section-header"><span class="section-title">${t('pr_activity')}</span></div>
-    <div class="card mb-20">
-      <div class="streak-calendar">
-        ${calDays.map(d => `
-          <div class="cal-day ${d.isToday ? 'today' : d.isActive ? 'active-day' : ''}" title="${d.isToday ? 'Today' : ''}">
-            ${d.day}
-          </div>
-        `).join('')}
-      </div>
-      <div style="margin-top:12px;font-size:0.78rem;color:var(--text-muted);display:flex;gap:16px;">
-        <span>${t('pr_cal_active')}</span>
-        <span style="color:var(--accent-purple);">${t('pr_cal_today')}</span>
-        <span>${t('pr_cal_inactive')}</span>
-      </div>
-    </div>
-
-    <!-- Badges Grid -->
-    <div class="section-header"><span class="section-title">${t('pr_badges_title')}</span></div>
-    <div class="card mb-20">
-      <div class="badges-grid">
-        ${BADGES.map(badge => {
-          const earned = state.earnedBadges.includes(badge.id);
+      <!-- Language Progress v2 -->
+      <div class="section-header" style="padding: 0 15px;"><span class="section-title">${t('pr_lang_progress')}</span></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:15px;padding:0 15px;margin-bottom:30px;">
+        ${Object.values(COURSES).map(course => {
+          const prefixMap = { 'python': 'py-', 'javascript': 'js-', 'sql': 'sql-', 'html_css': 'hc-' };
+          const prefix = prefixMap[course.id] || course.id.substring(0, 2);
+          const done = state.completedLessons.filter(id => id.startsWith(prefix)).length;
+          const total = course.units.reduce((a, u) => a + u.lessons.length, 0);
+          const percent = total ? Math.round((done / total) * 100) : 0;
+          
           return `
-            <div class="badge-item ${earned ? `earned ${badge.rarity}` : 'locked'}" title="${badge.description}">
-              <span class="badge-emoji">${badge.icon}</span>
-              <span class="badge-name">${escHtml(badge.name)}</span>
+            <div class="profile-v2-course-card">
+              <div class="p-v2-course-header">
+                <div class="p-v2-course-title">
+                  <span class="p-v2-course-icon">${course.icon}</span>
+                  ${course.name}
+                </div>
+                <div style="font-weight:900;color:var(--text-primary);font-size:0.95rem;">${percent}%</div>
+              </div>
+              <div class="p-v2-progress-track">
+                <div class="p-v2-progress-fill" style="width:${percent}%;background:${course.color};">
+                  <div class="p-v2-progress-glow"></div>
+                </div>
+              </div>
+              <div class="p-v2-course-stats">
+                <span>⚡ ${done} Leçons</span>
+                <span>${total} Total</span>
+              </div>
             </div>
           `;
         }).join('')}
       </div>
-    </div>
 
-    <!-- Daily Goals (Mimo Style) -->
-    <div class="section-header"><span class="section-title">🎯 ${t('pr_daily_goal')}</span></div>
-    <div class="card mb-20">
-      <div style="font-size:0.82rem;color:var(--text-secondary);margin-bottom:12px;">${t('pr_goal_hint')}</div>
-      <div class="goal-picker">
-        ${[
-          {id:'relaxed',xp:5,label:t('goal_relaxed')},
-          {id:'regular',xp:15,label:t('goal_regular')},
-          {id:'serious',xp:30,label:t('goal_serious')},
-          {id:'insane',xp:50,label:t('goal_insane')}
-        ].map(goal => `
-          <div class="goal-option ${state.dailyGoal === goal.id ? 'active' : ''}" onclick="setDailyGoal('${goal.id}')">
-            <div class="goal-info">
-              <span class="goal-label">${goal.label}</span>
-              <span class="goal-xp">${goal.xp} XP / jour</span>
+      <!-- Activity Calendar (Glass version) -->
+      <div class="section-header" style="padding: 0 15px;"><span class="section-title">${t('pr_activity')}</span></div>
+      <div class="profile-glass-card mb-30" style="margin-left:15px;margin-right:15px;">
+        <div class="streak-calendar">
+          ${calDays.map(d => `
+            <div class="cal-day ${d.isToday ? 'today' : d.isActive ? 'active-day' : ''}" title="${d.isToday ? 'Today' : ''}">
+              ${d.day}
             </div>
-            <div class="goal-check">${state.dailyGoal === goal.id ? '✅' : ''}</div>
-          </div>
-        `).join('')}
+          `).join('')}
+        </div>
+        <div style="margin-top:12px;font-size:0.75rem;color:var(--text-muted);display:flex;gap:16px;justify-content:center;">
+          <span>${t('pr_cal_active')}</span>
+          <span style="color:var(--accent-purple);font-weight:800;">${t('pr_cal_today')}</span>
+        </div>
       </div>
-    </div>
 
-    <!-- Account -->
-    <div class="section-header"><span class="section-title">${t('pr_account')}</span></div>
-    <div class="card mb-20">
-      <div style="display:flex;flex-direction:column;gap:12px;">
-        <div style="display:flex;justify-content:space-between;align-items:center;">
-          <span style="color:var(--text-secondary);font-size:0.875rem;">${t('pr_username')}</span>
-          <span style="font-weight:700;">${escHtml(state.username)}</span>
-        </div>
-        <div style="display:flex;justify-content:space-between;align-items:center;">
-          <span style="color:var(--text-secondary);font-size:0.875rem;">${t('pr_member')}</span>
-          <span style="font-weight:700;">${joinDate.toLocaleDateString()}</span>
-        </div>
-        <div style="display:flex;justify-content:space-between;align-items:center;">
-          <span style="color:var(--text-secondary);font-size:0.875rem;">${t('pr_xp_total')}</span>
-          <span style="font-weight:700;color:var(--accent-yellow);">${state.totalXP.toLocaleString()} XP</span>
+      <!-- Daily Goals (Mimo Style) -->
+      <div class="section-header" style="padding: 0 15px;"><span class="section-title">🎯 ${t('pr_daily_goal')}</span></div>
+      <div class="profile-glass-card mb-30" style="margin-left:15px;margin-right:15px;">
+        <div class="goal-picker" style="grid-template-columns:1fr 1fr;">
+          ${[
+            {id:'relaxed',xp:5,label:t('goal_relaxed')},
+            {id:'regular',xp:15,label:t('goal_regular')},
+            {id:'serious',xp:30,label:t('goal_serious')},
+            {id:'insane',xp:50,label:t('goal_insane')}
+          ].map(goal => `
+            <div class="goal-option ${state.dailyGoal === goal.id ? 'active' : ''}" onclick="setDailyGoal('${goal.id}')" style="padding:10px;border-radius:12px;">
+              <div class="goal-info">
+                <span class="goal-label" style="font-size:0.8rem;">${goal.label}</span>
+                <span class="goal-xp" style="font-size:0.65rem;">${goal.xp} XP</span>
+              </div>
+              <div class="goal-check">${state.dailyGoal === goal.id ? '✅' : ''}</div>
+            </div>
+          `).join('')}
         </div>
       </div>
-    </div>
-    
-    <!-- QR Code / Share -->
-    <div class="section-header"><span class="section-title">📱 ${t('pr_share')}</span></div>
-    <div class="card mb-20" style="text-align:center;">
-      ${window.location.protocol === 'file:' ? `
-        <div style="background:rgba(255,150,0,0.1); border:1px solid rgba(255,150,0,0.3); border-radius:var(--radius-md); padding:16px; margin-bottom:16px; text-align:left;">
-          <div style="display:flex; align-items:center; gap:10px; margin-bottom:6px;">
-            <span style="font-size:1.2rem;">⚠️</span>
-            <span style="font-size:0.85rem; font-weight:800; color:var(--accent-orange);">${t('pr_qr_warn_title')}</span>
-          </div>
-          <div style="font-size:0.75rem; color:var(--text-secondary); line-height:1.4;">
-            ${t('pr_qr_warn_desc')}
-          </div>
-        </div>
-      ` : ''}
-      <div style="font-size:0.82rem;color:var(--text-secondary);margin-bottom:12px;">${t('pr_qr_hint')}</div>
-      <div style="background:white; padding:12px; display:inline-block; border-radius:var(--radius-md); box-shadow:0 4px 12px rgba(0,0,0,0.1);">
-        <img id="qr-code" src="https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=${encodeURIComponent(window.location.href)}" 
-             alt="QR Code" style="width:160px;height:160px;display:block;">
-      </div>
-      <div style="margin-top:12px;font-size:0.75rem;color:var(--text-muted);word-break:break-all; font-family:monospace; line-height:1.4;">
-        ${window.location.href}
-      </div>
-    </div>
 
-    <!-- Theme Settings -->
-    <div class="section-header"><span class="section-title">${t('pr_appearance')}</span></div>
-    <div class="card mb-20">
-      <div style="font-size:0.82rem;color:var(--text-secondary);margin-bottom:12px;">${t('pr_theme_hint')}</div>
-      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;" id="theme-picker">
-        ${[{id:'dark',icon:'🌙',label:t('theme_dark')},{id:'light',icon:'☀️',label:t('theme_light')},{id:'auto',icon:'⚙️',label:t('theme_auto')}].map(thm => `
-          <button onclick="setThemeFromProfile('${thm.id}')"
-            style="padding:12px 8px;border-radius:var(--radius-md);border:1.5px solid var(--border);background:var(--bg-card);cursor:pointer;font-family:inherit;transition:all 0.2s ease;display:flex;flex-direction:column;align-items:center;gap:5px;"
-            class="theme-pick-btn" data-theme-id="${thm.id}">
-            <span style="font-size:1.4rem;">${thm.icon}</span>
-            <span style="font-size:0.78rem;font-weight:700;color:var(--text-secondary);">${thm.label}</span>
-          </button>
-        `).join('')}
-      </div>
-    </div>
-
-    <!-- Security & Privacy -->
-    <div class="section-header"><span class="section-title">🛡️ Sécurité & Confidentialité</span></div>
-    <div class="card mb-20">
-      <div style="display:flex;flex-direction:column;gap:15px;">
-        <div>
-          <div style="font-weight:700;font-size:0.9rem;margin-bottom:4px;">Sauvegarde de compte</div>
-          <div style="font-size:0.8rem;color:var(--text-secondary);margin-bottom:8px;">Génère un jeton pour transférer ton progrès sur un autre appareil.</div>
-          <button class="btn btn-secondary btn-sm" onclick="exportStateToken()">Générer un Jeton 🔑</button>
-        </div>
-        <hr style="border:0;border-top:1px solid var(--border);">
-        <div style="display:flex;justify-content:space-between;align-items:center;">
-          <div>
-            <div style="font-weight:700;font-size:0.9rem;">Politique de confidentialité</div>
-            <div style="font-size:0.8rem;color:var(--text-secondary);">Consulte comment nous gérons tes données.</div>
-          </div>
-          <a href="privacy.html" target="_blank" class="btn btn-ghost btn-sm">Voir 📄</a>
+      <!-- Appearance & Themes -->
+      <div class="section-header" style="padding: 0 15px;"><span class="section-title">🎨 Thèmes</span></div>
+      <div class="profile-glass-card mb-30" style="margin-left:15px;margin-right:15px;">
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;">
+          ${[{id:'dark',icon:'🌙',lbl:'Sombre'},{id:'light',icon:'☀️',lbl:'Clair'},{id:'auto',icon:'⚙️',lbl:'Auto'}].map(thm => `
+            <button onclick="setThemeFromProfile('${thm.id}')" class="stat-v2-card" style="padding:10px;">
+              <span style="font-size:1.5rem;">${thm.icon}</span>
+              <span style="font-size:0.7rem;font-weight:800;">${thm.lbl}</span>
+            </button>
+          `).join('')}
         </div>
       </div>
-    </div>
 
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px;">
-      <button class="btn btn-secondary" onclick="changeUsername()">${t('pr_edit_name')}</button>
-      <button class="btn btn-danger" onclick="confirmReset()">${t('pr_reset')}</button>
+      <!-- Security & Settings (Compact Group) -->
+      <div style="display:grid;grid-template-columns:1.2fr 1fr;gap:15px;padding:0 15px;margin-bottom:30px;">
+        <div class="profile-glass-card">
+          <div style="font-weight:900;font-size:0.95rem;margin-bottom:8px;">🛡️ Sécurité</div>
+            <button class="btn btn-secondary btn-sm btn-full" onclick="exportStateToken()">Jeton 🔑</button>
+            <a href="privacy.html" target="_blank" class="btn btn-ghost btn-sm btn-full" style="margin-top:5px;font-size:0.7rem;">Confidentialité 📄</a>
+        </div>
+        <div class="profile-glass-card">
+           <div style="font-weight:900;font-size:0.95rem;margin-bottom:8px;">⚙️ Compte</div>
+           <button class="btn btn-secondary btn-sm btn-full" onclick="changeUsername()">Renommer</button>
+           <button class="btn btn-danger btn-sm btn-full" onclick="confirmReset()" style="margin-top:5px;">Effacer</button>
+        </div>
+      </div>
+
+      <!-- QR Share -->
+      <div class="profile-glass-card mb-40" style="margin-left:15px;margin-right:15px;text-align:center;">
+        <div style="font-weight:900;margin-bottom:10px;">📲 Partager mon profil</div>
+        <div style="background:white; padding:10px; display:inline-block; border-radius:12px; box-shadow:0 4px 15px rgba(0,0,0,0.1);">
+          <img id="qr-code" src="https://api.qrserver.com/v1/create-qr-code/?size=140x140&data=${encodeURIComponent(window.location.href)}" style="width:140px;height:140px;">
+        </div>
+      </div>
     </div>
   `;
 

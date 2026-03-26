@@ -2849,3 +2849,19 @@ main { contain: content; will-change: opacity, transform; }
 
 .btn:active, .nav-item:active, .path-node:active { transform: scale(0.95); transition: transform 0.1s; }
 @media (display-mode: standalone) { body { padding-top: env(safe-area-inset-top); padding-bottom: env(safe-area-inset-bottom); } }
+
+/* --- Expert Profile Redesign --- */
+.profile-v2-container { max-width: 600px; margin: 0 auto; }
+.profile-glass-card { background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 20px; padding: 20px; transition: transform 0.3s ease; }
+.profile-v2-hero { position: relative; padding: 40px 20px; text-align: center; background: linear-gradient(135deg, #1cb0f6 0%, #7c3aed 100%); border-radius: 0 0 30px 30px; margin-bottom: 30px; color: white; box-shadow: 0 10px 30px rgba(0,0,0,0.2); }
+.avatar-ring-container { position: relative; width: 120px; height: 120px; margin: 0 auto 15px; }
+.avatar-v2-display { width: 100px; height: 100px; background: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 3.5rem; position: absolute; top: 10px; left: 10px; z-index: 2; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
+.level-ring { width: 120px; height: 120px; border-radius: 50%; background: conic-gradient(var(--accent-yellow) var(--p), transparent 0); transition: --p 0.5s; --p: 0%; }
+.profile-v2-name { font-size: 1.8rem; font-weight: 900; margin-bottom: 5px; text-shadow: 0 2px 4px rgba(0,0,0,0.2); }
+.profile-v2-meta { font-size: 0.9rem; opacity: 0.9; font-weight: 700; background: rgba(0,0,0,0.2); display: inline-block; padding: 4px 12px; border-radius: 20px; }
+.stats-v2-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-bottom: 30px; padding: 0 10px; }
+.stat-v2-card { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 15px; background: var(--bg-card); border-radius: 18px; border: 1.5px solid var(--border); transition: all 0.2s; }
+.stat-v2-card:hover { transform: translateY(-5px); border-color: var(--accent-blue); background: rgba(28, 176, 246, 0.05); }
+.stat-v2-icon { font-size: 1.8rem; margin-bottom: 5px; }
+.stat-v2-val { font-size: 1.2rem; font-weight: 900; }
+.stat-v2-lbl { font-size: 0.7rem; font-weight: 800; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.5px; }
