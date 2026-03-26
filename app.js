@@ -139,18 +139,27 @@ function updateStreak() {
   const yesterday = new Date();
   yesterday.setDate(yesterday.getDate() - 1);
 
+  const tips = [
+    "Astuce : Utilise le Playground pour tester tes propres idées !",
+    "Conseil : Pratiquer 10 minutes par jour est mieux qu'une heure par semaine.",
+    "Le saviez-vous ? Python a été nommé d'après les Monty Python.",
+    "Astuce : Ton tuteur IA 🤖 peut t'expliquer n'importe quelle erreur de code.",
+    "Objectif : Essaie de compléter une unité entière cette semaine !"
+  ];
+  const randomTip = tips[Math.floor(Math.random() * tips.length)];
+
   if (last === yesterday.toDateString()) {
     AppState.streakDays += 1;
     addNotification({
       title: 'Bon retour ! 🔥',
-      message: `Ta série de ${AppState.streakDays} jours continue. Prêt pour une nouvelle leçon ?`,
+      message: `Série de ${AppState.streakDays} jours ! ${randomTip}`,
       icon: '⚡'
     });
   } else {
     AppState.streakDays = 1;
     addNotification({
       title: 'C\'est reparti ! 🚀',
-      message: 'Commence une nouvelle série aujourd\'hui et atteins tes objectifs !',
+      message: `Nouvelle série aujourd'hui ! ${randomTip}`,
       icon: '🎯'
     });
   }
@@ -330,6 +339,7 @@ resetInactivityTimer();
 
 window.navigate = navigate;
 window.handleRoute = handleRoute;
+window.DEFAULT_STATE = DEFAULT_STATE;
 
 // ── Theme System ───────────────────────────────────────────
 const THEMES = [

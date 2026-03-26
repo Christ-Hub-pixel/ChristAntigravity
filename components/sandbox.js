@@ -16,6 +16,18 @@ function renderSandbox(initialCode = '', lang = 'javascript') {
           <h2>Code Playground — ${lang.toUpperCase()}</h2>
         </div>
         <div class="sandbox-actions">
+          <select id="sandbox-template-select" class="sandbox-select" onchange="loadSandboxTemplate()">
+            <option value="">📂 Charger un exemple...</option>
+            ${lang === 'javascript' ? `
+              <option value="js-hello">👋 Hello World</option>
+              <option value="js-loop">🔄 Boucle For</option>
+              <option value="js-dom">🌐 Manipulation DOM</option>
+            ` : `
+              <option value="py-hello">👋 Bonjour Python</option>
+              <option value="py-list">📋 Listes & Maths</option>
+              <option value="py-func">🔧 Fonctions</option>
+            `}
+          </select>
           <button class="sandbox-btn sandbox-run-btn" onclick="runSandboxCode()">
              <span>▶</span> EXÉCUTER
           </button>
@@ -118,6 +130,30 @@ function loadSkulpt() {
   });
 }
 
+const SANDBOX_TEMPLATES = {
+  'js-hello': '// Hello World\nconsole.log("Bienvenue sur CodeLingo !");\nconsole.log(2 + 2);',
+  'js-loop': '// Boucle simple\nfor (let i = 1; i <= 5; i++) {\n  console.log("Itération n°" + i);\n}',
+  'js-dom': '// Alerte browser\nalert("Salut depuis le bac à sable !");',
+  'py-hello': '# Bonjour Python\nprint("Hello from Python!")\nname = "Lingo"\nprint(f"Salut {name}")',
+  'py-list': '# Listes et Maths\nnombres = [1, 2, 3, 4, 5]\ncarres = [x**2 for x in nombres]\nprint("Carrés:", carres)',
+  'py-func': '# Fonctions Python\ndef saluer(nom):\n  return f"Bonjour {nom} !"\n\nprint(saluer("Élève"))'
+};
+
+function loadSandboxTemplate() {
+  const select = document.getElementById('sandbox-template-select');
+  const val = select.value;
+  if (!val) return;
+  
+  const editor = document.getElementById('sandbox-editor');
+  editor.value = SANDBOX_TEMPLATES[val] || '';
+  updateSandboxLineNumbers();
+  
+  // Feedback visuel
+  editor.style.boxShadow = 'inset 0 0 15px var(--accent-blue-semi)';
+  setTimeout(() => { editor.style.boxShadow = 'none'; }, 400);
+}
+
 window.renderSandbox = renderSandbox;
 window.runSandboxCode = runSandboxCode;
 window.updateSandboxLineNumbers = updateSandboxLineNumbers;
+window.loadSandboxTemplate = loadSandboxTemplate;

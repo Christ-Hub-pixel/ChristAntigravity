@@ -10,6 +10,7 @@ const COURSES = {
     color: '#3776ab',
     accent: '#ffd43b',
     description: 'Maitrisez Python de zéro au niveau expert',
+    level: 'Beginner',
     units: [
       {
         id: 'py-basics',
@@ -551,6 +552,7 @@ const COURSES = {
     color: '#f7df1e',
     accent: '#323330',
     description: 'Build the web with JavaScript',
+    level: 'Beginner',
     units: [
       {
         id: 'js-basics',
@@ -873,6 +875,7 @@ const COURSES = {
     color: '#e34c26',
     accent: '#264de4',
     description: 'Build beautiful websites from scratch',
+    level: 'Beginner',
     units: [
       {
         id: 'hc-basics',
@@ -986,6 +989,7 @@ const COURSES = {
     color: '#e07b39',
     accent: '#f5cba7',
     description: 'Maîtrisez les bases de données avec SQL',
+    level: 'Intermediate',
     units: [
       {
         id: 'sql-basics',

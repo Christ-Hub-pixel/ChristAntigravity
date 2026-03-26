@@ -153,6 +153,11 @@ function renderHome() {
 
   updateTopbar();
   setTimeout(renderPathSVG, 80);
+  
+  // Auto-tutorial for first login
+  if (!state.tutorialDone && typeof startTutorial === 'function') {
+    setTimeout(startTutorial, 1000);
+  }
 }
 
 // ── SVG Path Connector ─────────────────────────────────────

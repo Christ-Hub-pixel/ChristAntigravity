@@ -51,10 +51,15 @@ function renderAuth() {
           </button>
         </form>
         <div class="auth-divider"><span>ou</span></div>
-        <button class="btn btn-secondary btn-full" onclick="loginAsGuest()">
-          👻 Mode Invité (sans compte)
-        </button>
-        <button class="btn btn-ghost btn-sm auth-about-link" onclick="navigate('#about')">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+          <button class="btn btn-secondary" onclick="loginAsGuest()">
+            👻 Invité
+          </button>
+          <button class="btn btn-secondary" onclick="importAccount()">
+            🔑 Importer
+          </button>
+        </div>
+        <button class="btn btn-ghost btn-sm auth-about-link" onclick="navigate('#about')" style="margin-top:10px;">
           ℹ️ À propos de CodeLingo
         </button>
       </div>
@@ -84,8 +89,13 @@ async function handleAuthStep1(e) {
     showModal({ icon: '👤', title: 'Nom invalide', message: '3 à 20 caractères (lettres, chiffres, _).' });
     return;
   }
-  if (password.length < 6) {
-    showModal({ icon: '🔑', title: 'Mot de passe', message: '6 caractères minimum pour votre sécurité.' });
+  const passRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/;
+  if (!passRegex.test(password)) {
+    showModal({ 
+      icon: '🔐', 
+      title: 'Sécurité : Mot de passe faible', 
+      message: 'Ton mot de passe doit contenir au moins 8 caractères, une majuscule et un chiffre.' 
+    });
     return;
   }
   // Hash the password before saving
@@ -278,17 +288,12 @@ function logoutUser() {
     cancelText: 'Annuler',
     onConfirm: () => {
       // Keep language & theme preferences
-      const lang  = AppState.lang;
-      const theme = AppState.theme;
+      const currentUiPrefs = JSON.parse(JSON.stringify(AppState.uiPrefs));
       // Reset to fresh state
-      const fresh = {
-        isLoggedIn: false, username: '', avatar: '🧑‍💻', password: '',
-        totalXP: 0, streakDays: 0, lastActiveDate: '', completedLessons: [],
-        hearts: 5, maxHearts: 5, gems: 500, currentCourse: 'python',
-        notifications: [], dailyGoal: 20, dailyXP: 0,
-        lang, theme,
-      };
-      Object.assign(AppState, fresh);
+      Object.assign(AppState, JSON.parse(JSON.stringify(DEFAULT_STATE)));
+      AppState.isLoggedIn = false;
+      AppState.username = '';
+      AppState.uiPrefs = currentUiPrefs;
       saveState();
 
       closeProfileMenu();
@@ -299,8 +304,41 @@ function logoutUser() {
   });
 }
 
+function importAccount() {
+  const token = prompt("Colle ton jeton de sauvegarde ici :");
+  if (!token) return;
+  
+  try {
+    const json = decodeURIComponent(escape(atob(token)));
+    const newState = JSON.parse(json);
+    
+    // Basic verification
+    if (!newState.username || !newState.completedLessons) throw new Error("Format invalide");
+    
+    Object.assign(AppState, newState);
+    AppState.isLoggedIn = true;
+    saveState();
+    
+    showModal({
+      icon: '✅',
+      title: 'Compte Restauré',
+      message: `Bon retour, ${newState.username} ! Ton progrès a été chargé avec succès.`,
+      onConfirm: () => {
+        location.reload();
+      }
+    });
+  } catch (err) {
+    showModal({
+      icon: '❌',
+      title: 'Erreur d\'import',
+      message: 'Le jeton est invalide ou corrompu. Assure-toi d\'avoir copié tout le code.'
+    });
+  }
+}
+
 window.renderAuth            = renderAuth;
 window.handleAuthStep1       = handleAuthStep1;
+window.importAccount         = importAccount;
 window.pickAvatar            = pickAvatar;
 window.renderLangPicker      = renderLangPicker;
 window.selectAuthLang        = selectAuthLang;

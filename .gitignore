@@ -1,0 +1,16 @@
+node_modules/
+.DS_Store
+.env
+dist/
+platforms/
+plugins/
+www/
+android/
+ios/
+capacitor.config.json
+package-lock.json
+.gemini/
+.agents/
+.agent/
+_agents/
+_agent/

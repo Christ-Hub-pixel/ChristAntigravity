@@ -8,18 +8,24 @@ function renderReference(courseId = 'python') {
 
   const main = document.getElementById('app-main');
   main.innerHTML = `
+    <div class="ref-header">
+      <div class="ref-tabs">
+        <button class="ref-tab ${courseId === 'python' ? 'active' : ''}" onclick="renderReference('python')">🐍 Python</button>
+        <button class="ref-tab ${courseId === 'javascript' ? 'active' : ''}" onclick="renderReference('javascript')">🟨 JavaScript</button>
+      </div>
+      <div class="ref-search-wrap">
+        <input type="text" class="ref-search" placeholder="Rechercher une fonction..." oninput="filterReference(this.value)">
+      </div>
+    </div>
     <div class="ref-container">
       <div class="ref-sidebar">
-        <div class="ref-search-wrap">
-          <input type="text" class="ref-search" placeholder="Rechercher..." oninput="filterReference(this.value)">
-        </div>
         <div class="ref-nav" id="ref-nav-list">
           ${renderRefNav(data)}
         </div>
       </div>
       
       <div class="ref-content" id="ref-content-area">
-        ${renderRefItem(data.categories[0].items[0])}
+        ${data.categories[0] && data.categories[0].items[0] ? renderRefItem(data.categories[0].items[0]) : '<div class="ref-empty">Sélectionnez un élément</div>'}
       </div>
     </div>
   `;

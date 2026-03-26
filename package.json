@@ -1,0 +1,27 @@
+{
+  "name": "christantigravity",
+  "version": "1.0.0",
+  "description": "Ce guide vous explique comment mettre votre site **CodeLingo** en ligne gratuitement pour le partager avec d'autres personnes.",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Christ-Hub-pixel/ChristAntigravity.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/Christ-Hub-pixel/ChristAntigravity/issues"
+  },
+  "homepage": "https://github.com/Christ-Hub-pixel/ChristAntigravity#readme",
+  "dependencies": {
+    "@capacitor/android": "^8.3.0",
+    "@capacitor/cli": "^8.3.0",
+    "@capacitor/core": "^8.3.0",
+    "@capacitor/ios": "^8.3.0"
+  }
+}

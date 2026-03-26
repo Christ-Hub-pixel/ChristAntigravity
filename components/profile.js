@@ -80,29 +80,33 @@ function renderProfile() {
 
     <!-- Language Progress -->
     <div class="section-header"><span class="section-title">${t('pr_lang_progress')}</span></div>
-    <div class="card mb-20">
-      <div style="margin-bottom:16px;">
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
-          <div style="display:flex;align-items:center;gap:8px;font-weight:700;">
-            <span>🐍</span> Python
+    <div class="card mb-20 profile-progress-grid">
+      ${Object.values(COURSES).map(course => {
+        // Map course IDs to their lesson ID prefixes
+        const prefixMap = { 'python': 'py-', 'javascript': 'js-', 'sql': 'sql-', 'html_css': 'hc-' };
+        const prefix = prefixMap[course.id] || course.id.substring(0, 2);
+        
+        const done = state.completedLessons.filter(id => id.startsWith(prefix)).length;
+        const total = course.units.reduce((a, u) => a + u.lessons.length, 0);
+        const percent = total ? Math.round((done / total) * 100) : 0;
+        
+        return `
+          <div class="profile-course-item">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+              <div style="display:flex;align-items:center;gap:8px;font-weight:700;font-size:0.9rem;">
+                <span class="p-course-icon">${course.icon}</span> ${course.name}
+              </div>
+              <span style="font-size:0.82rem;color:var(--text-secondary);font-weight:800;">${percent}%</span>
+            </div>
+            <div class="progress-bar-track" style="height:10px;">
+              <div class="progress-bar-fill" style="width:${percent}%;background:${course.color};"></div>
+            </div>
+            <div style="margin-top:4px;font-size:0.7rem;color:var(--text-muted);text-align:right;">
+              ${done} / ${total} ${t('lessons_label')}
+            </div>
           </div>
-          <span style="font-size:0.82rem;color:var(--text-secondary);">${pyDone}/${pyTotal} ${t('lessons_label')}</span>
-        </div>
-        <div class="progress-bar-track">
-          <div class="progress-bar-fill" style="width:${pyTotal ? Math.round(pyDone/pyTotal*100) : 0}%;background:#3776ab;"></div>
-        </div>
-      </div>
-      <div>
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
-          <div style="display:flex;align-items:center;gap:8px;font-weight:700;">
-            <span>🟨</span> JavaScript
-          </div>
-          <span style="font-size:0.82rem;color:var(--text-secondary);">${jsDone}/${jsTotal} ${t('lessons_label')}</span>
-        </div>
-        <div class="progress-bar-track">
-          <div class="progress-bar-fill" style="width:${jsTotal ? Math.round(jsDone/jsTotal*100) : 0}%;background:#f7df1e;"></div>
-        </div>
-      </div>
+        `;
+      }).join('')}
     </div>
 
     <!-- Streak Calendar -->
@@ -219,6 +223,26 @@ function renderProfile() {
       </div>
     </div>
 
+    <!-- Security & Privacy -->
+    <div class="section-header"><span class="section-title">🛡️ Sécurité & Confidentialité</span></div>
+    <div class="card mb-20">
+      <div style="display:flex;flex-direction:column;gap:15px;">
+        <div>
+          <div style="font-weight:700;font-size:0.9rem;margin-bottom:4px;">Sauvegarde de compte</div>
+          <div style="font-size:0.8rem;color:var(--text-secondary);margin-bottom:8px;">Génère un jeton pour transférer ton progrès sur un autre appareil.</div>
+          <button class="btn btn-secondary btn-sm" onclick="exportStateToken()">Générer un Jeton 🔑</button>
+        </div>
+        <hr style="border:0;border-top:1px solid var(--border);">
+        <div style="display:flex;justify-content:space-between;align-items:center;">
+          <div>
+            <div style="font-weight:700;font-size:0.9rem;">Politique de confidentialité</div>
+            <div style="font-size:0.8rem;color:var(--text-secondary);">Consulte comment nous gérons tes données.</div>
+          </div>
+          <a href="privacy.html" target="_blank" class="btn btn-ghost btn-sm">Voir 📄</a>
+        </div>
+      </div>
+    </div>
+
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px;">
       <button class="btn btn-secondary" onclick="changeUsername()">${t('pr_edit_name')}</button>
       <button class="btn btn-danger" onclick="confirmReset()">${t('pr_reset')}</button>
@@ -310,9 +334,26 @@ function setDailyGoal(goalId) {
   });
 }
 
+function exportStateToken() {
+  const stateStr = JSON.stringify(AppState);
+  const token = btoa(unescape(encodeURIComponent(stateStr)));
+  
+  showModal({
+    icon: '🔑',
+    title: 'Ton Jeton de Sauvegarde',
+    message: 'Copie ce jeton et garde-le en lieu sûr. Tu pourras l\'utiliser pour te reconnecter ou transférer ton compte.',
+    confirmText: 'Copier',
+    onConfirm: () => {
+      navigator.clipboard.writeText(token);
+      addNotification({ icon: '✅', title: 'Copié !', message: 'Ton jeton est dans le presse-papier.' });
+    }
+  });
+}
+
 window.renderProfile    = renderProfile;
 window.changeUsername   = changeUsername;
 window.confirmReset     = confirmReset;
 window.changeAvatar     = changeAvatar;
 window.toggleAvatarPicker = toggleAvatarPicker;
+window.exportStateToken = exportStateToken;
 window.setDailyGoal     = setDailyGoal;

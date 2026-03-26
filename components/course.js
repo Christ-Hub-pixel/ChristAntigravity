@@ -13,13 +13,16 @@ function renderCourses() {
       <div style="font-size:0.85rem;color:var(--text-secondary);">${t('courses_sub')}</div>
     </div>
 
-    <!-- Language Tabs -->
     <div class="course-tabs" id="course-tabs">
       ${Object.values(COURSES).map(c => `
         <div class="course-tab ${c.id === activeCourseTab ? 'active' : ''}" 
              onclick="switchCourseTab('${c.id}')"
              id="tab-${c.id}">
-          ${c.icon} ${c.name}
+          <span class="tab-icon">${c.icon}</span>
+          <div class="tab-info">
+            <span class="tab-name">${c.name}</span>
+            <span class="tab-level badge-${(c.level || 'Beginner').toLowerCase()}">${c.level || 'Beginner'}</span>
+          </div>
         </div>
       `).join('')}
     </div>

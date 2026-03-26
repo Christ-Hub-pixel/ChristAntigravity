@@ -2737,3 +2737,104 @@ h1, .section-title, .duo-header-title {
   .about-features-grid { grid-template-columns: 1fr; }
   .about-stats-row { flex-wrap: wrap; gap: 12px; }
 }
+
+/* ============================================================
+   Profile Page Upgrades
+   ============================================================ */
+.profile-progress-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 24px !important;
+}
+
+.profile-course-item {
+  transition: transform 0.2s ease;
+}
+.profile-course-item:hover {
+  transform: translateX(4px);
+}
+
+.p-course-icon {
+  font-size: 1.2rem;
+  background: var(--bg-hover);
+  width: 38px;
+  height: 38px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+@media (min-width: 601px) {
+  .profile-progress-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+  }
+}
+
+/* -- AI Bot Position Fix (Mobile) -------------------------- */
+@media (max-width: 600px) {
+  .ai-fab {
+    bottom: 84px !important; /* Above bottom nav */
+    right: 16px !important;
+  }
+  
+  /* Sidebar bottom section fix for mobile */
+  .sidebar-bottom-section {
+    position: static !important;
+    padding: 0 10px !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    gap: 4px !important;
+  }
+  
+  /* Make icons smaller in bottom nav to fit */
+  .sidebar-bottom-section .icon-btn {
+    padding: 8px !important;
+    min-height: 48px !important;
+  }
+  
+  /* Ensure the bot doesn't cover anything in profile or course list */
+  #app-main {
+    padding-bottom: 120px !important;
+  }
+}
+
+/* --- Professional Badge Styles --- */
+.tab-info { display: flex; flex-direction: column; align-items: flex-start; margin-left: 10px; }
+.tab-name { font-weight: 700; font-size: 1rem; }
+.tab-level { font-size: 0.65rem; padding: 2px 6px; border-radius: 4px; text-transform: uppercase; font-weight: 800; margin-top: 2px; }
+.badge-beginner { background: #dcfce7; color: #166534; }
+.badge-intermediate { background: #fef9c3; color: #854d0e; }
+.badge-advanced { background: #fee2e2; color: #991b1b; }
+
+.course-tab { display: flex; align-items: center; padding: 10px 15px; border-radius: 12px; cursor: pointer; border: 2px solid transparent; transition: all 0.2s; }
+.course-tab.active { border-color: var(--accent-blue); background: rgba(28, 176, 246, 0.1); }
+.tab-icon { font-size: 1.5rem; }
+
+.sandbox-select { background: #1a1a1a; color: white; border: 1px solid #333; padding: 6px 12px; border-radius: 8px; margin-right: 10px; cursor: pointer; outline: none; }
+.sandbox-select:hover { border-color: var(--accent-blue); }
+:root { --accent-blue-semi: rgba(28, 176, 246, 0.4); }
+
+/* --- Interactive Tutorial Styles --- */
+.tutorial-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.5); z-index: 10000; pointer-events: none; }
+.tutorial-highlight { position: absolute; border-radius: 12px; box-shadow: 0 0 0 9999px rgba(0,0,0,0.6), 0 0 0 5px var(--accent-blue); pointer-events: none; transition: all 0.4s ease; }
+.tutorial-card { position: absolute; width: 280px; background: white; border-radius: 16px; padding: 15px; pointer-events: auto; }
+.tutorial-header { display: flex; justify-content: space-between; font-weight: 800; margin-bottom: 8px; color: #333; }
+.tutorial-title { font-size: 1.1rem; }
+.tutorial-body { font-size: 0.9rem; color: #555; line-height: 1.4; margin-bottom: 15px; }
+.tutorial-footer { display: flex; justify-content: space-between; align-items: center; }
+.tutorial-skip { background: transparent; border: none; font-size: 0.8rem; font-weight: 700; color: #999; cursor: pointer; }
+.tutorial-next { background: var(--accent-blue); color: white; border: none; padding: 6px 15px; border-radius: 10px; font-weight: 800; cursor: pointer; }
+
+/* --- Reference Tabs Styles --- */
+.ref-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 10px; }
+.ref-tabs { display: flex; gap: 5px; background: rgba(0,0,0,0.1); padding: 5px; border-radius: 12px; }
+.ref-tab { border: none; background: transparent; padding: 8px 16px; border-radius: 8px; font-weight: 800; color: var(--text-secondary); cursor: pointer; transition: all 0.2s; }
+.ref-tab.active { background: white; color: black; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+.ref-search-wrap { flex-grow: 1; max-width: 400px; }
+.ref-search { width: 100%; padding: 10px 15px; border-radius: 10px; border: 2.5px solid var(--border); background: var(--bg-card); color: var(--text-primary); outline: none; transition: border-color 0.2s; }
+.ref-search:focus { border-color: var(--accent-blue); }
