@@ -571,40 +571,35 @@ window.updateNotifBadge = updateNotifBadge;
 
 // ── PWA Installation ──────────────────────────────────────
 let deferredPrompt;
-const installBtn = document.getElementById('install-app-btn');
 
 window.addEventListener('beforeinstallprompt', (e) => {
-  // Prevent Chrome 67 and earlier from automatically showing the prompt
   e.preventDefault();
-  // Stash the event so it can be triggered later.
   deferredPrompt = e;
-  // Update UI signify the PWA can be installed
-  if (installBtn) installBtn.classList.remove('hidden');
+  
+  // Show the install section in profile if it exists
+  const pwaSection = document.getElementById('pwa-install-section');
+  if (pwaSection) pwaSection.style.display = 'block';
 });
 
-if (installBtn) {
-  installBtn.addEventListener('click', async () => {
-    if (!deferredPrompt) return;
-    // Show the prompt
-    deferredPrompt.prompt();
-    // Wait for the user to respond to the prompt
-    const { outcome } = await deferredPrompt.userChoice;
-    console.log(`Deploiement de l'app: ${outcome}`);
-    if (outcome === 'accepted') {
-      showModal({
-        icon: '📲',
-        title: 'Application installée',
-        message: 'CodeLingo a été ajouté à votre écran d\'accueil !'
-      });
-      installBtn.classList.add('hidden');
-    }
-    deferredPrompt = null;
-  });
-}
+window.triggerAppInstall = async () => {
+  if (!deferredPrompt) {
+     addNotification({ title: 'App déjà installée', message: 'L\'app est déjà sur ton écran d\'accueil !', icon: '📲' });
+     return;
+  }
+  deferredPrompt.prompt();
+  const { outcome } = await deferredPrompt.userChoice;
+  if (outcome === 'accepted') {
+    const pwaSection = document.getElementById('pwa-install-section');
+    if (pwaSection) pwaSection.style.display = 'none';
+  }
+  deferredPrompt = null;
+};
+window.triggerAppInstall = triggerAppInstall;
 
 window.addEventListener('appinstalled', (evt) => {
   console.log('CodeLingo a été installé sur l\'appareil');
-  if (installBtn) installBtn.classList.add('hidden');
+  const pwaSection = document.getElementById('pwa-install-section');
+  if (pwaSection) pwaSection.style.display = 'none';
 });
 
 // ── Bootstrap ──────────────────────────────────────────────

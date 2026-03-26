@@ -164,6 +164,15 @@ function renderProfile() {
         </div>
       </div>
 
+      <!-- Install App Section -->
+      <div style="display:grid;grid-template-columns:1fr;gap:15px;padding:0 15px;margin-bottom:30px;">
+        <div class="profile-glass-card" id="pwa-install-section" style="display:none;background:linear-gradient(135deg, rgba(28, 176, 246, 0.2), rgba(124, 58, 237, 0.2)); border:2.5px solid var(--accent-blue);">
+          <div style="font-weight:900;font-size:1.1rem;margin-bottom:8px;text-align:center;">📲 Installer l'App Mobile</div>
+          <p style="font-size:0.8rem;text-align:center;margin-bottom:12px;">Accède à CodeLingo en un clic depuis ton écran d'accueil, même sans internet !</p>
+          <button class="btn btn-primary btn-lg btn-full" onclick="window.triggerAppInstall()">Installer Maintenant ✨</button>
+        </div>
+      </div>
+
       <!-- Security & Settings (Compact Group) -->
       <div style="display:grid;grid-template-columns:1.2fr 1fr;gap:15px;padding:0 15px;margin-bottom:30px;">
         <div class="profile-glass-card">
