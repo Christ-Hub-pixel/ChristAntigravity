@@ -2279,3 +2279,461 @@ input:checked + .slider:before { transform: translateX(20px); }
     min-width: 220px;
   }
 }
+
+/* -- Lingo AI Universal Styles ---------------------------- */
+.ai-header-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.ai-header-robot { font-size: 1.5rem; }
+
+.ai-header-name {
+  font-weight: 900;
+  font-size: 0.9rem;
+  line-height: 1.2;
+}
+
+.ai-header-status {
+  font-size: 0.65rem;
+  color: var(--accent-green);
+  font-weight: 700;
+}
+
+/* Quick suggestion chips */
+.ai-suggestions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  padding: 8px 12px;
+  border-top: 1px solid var(--border);
+}
+
+.ai-suggestion-chip {
+  background: var(--bg-hover);
+  border: 1.5px solid var(--border);
+  border-radius: 20px;
+  padding: 5px 12px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--text-muted);
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.15s ease;
+}
+
+.ai-suggestion-chip:hover {
+  background: var(--accent-blue);
+  border-color: var(--accent-blue);
+  color: #fff;
+  transform: translateY(-1px);
+}
+
+/* ============================================================
+   PHASE 7 — Design & Animation Upgrade
+   ============================================================ */
+
+/* -- Enhanced Button Animations ---------------------------- */
+.btn {
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.18s cubic-bezier(0.34,1.56,0.64,1), 
+              box-shadow 0.18s ease,
+              background 0.2s ease !important;
+}
+.btn::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(255,255,255,0.12);
+  opacity: 0;
+  border-radius: inherit;
+  transition: opacity 0.2s;
+}
+.btn:hover::after  { opacity: 1; }
+.btn:active        { transform: scale(0.95) !important; }
+.btn-primary:hover { transform: translateY(-3px); box-shadow: 0 8px 24px rgba(88,204,2,0.35); }
+.btn-primary       { box-shadow: 0 4px 0 rgba(0,0,0,0.25); }
+
+/* -- Card Hover Lift --------------------------------------- */
+.card, .duo-widget, .lesson-card, .goal-option {
+  transition: transform 0.2s cubic-bezier(0.34,1.3,0.64,1), 
+              box-shadow 0.2s ease,
+              border-color 0.2s ease !important;
+}
+.duo-widget:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 32px rgba(0,0,0,0.25);
+}
+
+/* -- Nav Item Hover ---------------------------------------- */
+.nav-item {
+  transition: background 0.18s ease, transform 0.18s cubic-bezier(0.34,1.3,0.64,1) !important;
+}
+.nav-item:hover:not(.active) {
+  background: var(--bg-hover);
+  transform: scale(1.04);
+}
+
+/* -- Stat Pills Hover -------------------------------------- */
+.stat-pill {
+  transition: transform 0.2s ease, box-shadow 0.2s ease !important;
+}
+.stat-pill:hover {
+  transform: scale(1.08);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+}
+
+/* -- Path Node Enhanced Feedback -------------------------- */
+.path-node:not(.locked):hover {
+  transform: scale(1.12) !important;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.3) !important;
+}
+
+/* -- Smooth Page Transitions ------------------------------- */
+#app-main {
+  animation: pageEnter 0.25s ease;
+}
+@keyframes pageEnter {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* -- Focus Ring (Accessibility + Polish) ------------------- */
+:focus-visible {
+  outline: 3px solid var(--accent-blue);
+  outline-offset: 3px;
+  border-radius: 6px;
+}
+
+/* -- Typography Hierarchy Enhancement --------------------- */
+h1, .section-title, .duo-header-title {
+  letter-spacing: -0.02em;
+  font-feature-settings: 'ss01' 1;
+}
+.section-title {
+  font-size: clamp(1.3rem, 3vw, 2rem);
+  font-weight: 900;
+}
+
+/* -- Lesson Card Hover ------------------------------------- */
+.lesson-card:hover {
+  transform: translateY(-4px);
+  border-color: var(--accent-blue);
+  box-shadow: 0 8px 24px rgba(28,176,246,0.2);
+}
+
+/* -- Fill Input Enhancement -------------------------------- */
+.fill-input:focus {
+  border-color: var(--accent-blue);
+  box-shadow: 0 0 0 3px rgba(28,176,246,0.15);
+  transform: scale(1.01);
+}
+
+/* -- Unit Header Shimmer ----------------------------------- */
+.path-unit-header {
+  position: relative;
+  overflow: hidden;
+}
+.path-unit-header::after {
+  content: '';
+  position: absolute;
+  top: 0; left: -100%;
+  width: 60%; height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent);
+  animation: shimmer 3s infinite 2s;
+}
+@keyframes shimmer {
+  0%   { left: -60%; }
+  100% { left: 160%; }
+}
+
+/* -- ai-fab Pulse ------------------------------------------ */
+.ai-fab {
+  animation: fabPulse 3s ease-in-out infinite;
+}
+.ai-fab:hover {
+  animation: none;
+  transform: scale(1.15) rotate(10deg) !important;
+  box-shadow: 0 8px 30px rgba(28,176,246,0.5) !important;
+}
+@keyframes fabPulse {
+  0%, 100% { box-shadow: 0 4px 20px rgba(28,176,246,0.4); }
+  50%       { box-shadow: 0 4px 30px rgba(28,176,246,0.7); }
+}
+
+/* -- Responsive Mobile Improvements ----------------------- */
+@media (max-width: 480px) {
+  .stat-pill { padding: 4px 8px; font-size: 0.8rem; }
+  .duo-widget-value { font-size: 2rem; }
+  .path-unit-title { font-size: 1rem; }
+  .path-node { width: 62px; height: 62px; }
+  .duo-widget { padding: 14px; }
+}
+
+/* ============================================================
+   PHASE 7 — About Page, Responsive & Auth UX
+   ============================================================ */
+
+/* -- Splash Mini (in-app page loader) --------------------- */
+.splash-loading--mini {
+  height: 40vh;
+  min-height: 200px;
+}
+.splash-loading--mini .splash-logo { font-size: 4rem; line-height: 1; }
+
+/* -- Auth Divider ------------------------------------------ */
+.auth-divider {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 16px 0 10px;
+  color: var(--text-muted);
+  font-size: 0.8rem;
+}
+.auth-divider::before,
+.auth-divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--border);
+}
+
+.btn-ghost {
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  font-size: 0.82rem;
+  text-decoration: underline;
+  cursor: pointer;
+  padding: 6px;
+  transition: color 0.15s;
+}
+.btn-ghost:hover { color: var(--accent-blue); }
+
+.auth-about-link { margin-top: 10px; width: 100%; display: flex; justify-content: center; }
+
+/* -- About Page -------------------------------------------- */
+.about-page {
+  max-width: 640px;
+  margin: 0 auto;
+  padding: 24px 20px 80px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.about-hero {
+  text-align: center;
+  padding: 32px 16px 24px;
+}
+
+.about-logo {
+  width: 80px;
+  height: 80px;
+  border-radius: 20px;
+  margin-bottom: 14px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+}
+
+.about-title {
+  font-size: 2.4rem;
+  font-weight: 900;
+  background: linear-gradient(135deg, var(--accent-green), var(--accent-blue));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin: 0 0 8px;
+}
+
+.about-subtitle {
+  font-size: 1.05rem;
+  color: var(--text-muted);
+  font-style: italic;
+  margin-bottom: 16px;
+}
+
+.about-badges-row {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.about-badge {
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+.about-badge.green  { background: rgba(88,204,2,0.15);  color: var(--accent-green); }
+.about-badge.blue   { background: rgba(28,176,246,0.15); color: var(--accent-blue); }
+.about-badge.purple { background: rgba(167,139,250,0.15); color: var(--accent-purple); }
+.about-badge.orange { background: rgba(249,115,22,0.15); color: #f97316; }
+
+.about-section {
+  padding: 22px;
+  text-align: center;
+}
+
+.about-section-icon { font-size: 2rem; margin-bottom: 10px; }
+
+.about-section-title {
+  font-size: 1.3rem;
+  font-weight: 900;
+  margin-bottom: 12px;
+}
+
+.about-section-text {
+  color: var(--text-muted);
+  line-height: 1.7;
+  max-width: 520px;
+  margin: 0 auto;
+}
+
+.about-features-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+}
+
+.about-feature-card {
+  background: var(--bg-card);
+  border: 1.5px solid var(--border);
+  border-radius: 16px;
+  padding: 18px 14px;
+  text-align: center;
+  transition: transform 0.2s ease, border-color 0.2s;
+}
+.about-feature-card:hover {
+  transform: translateY(-4px);
+  border-color: var(--accent-blue);
+}
+.about-feature-icon { font-size: 1.7rem; display: block; margin-bottom: 8px; }
+.about-feature-card h3 { font-size: 0.9rem; font-weight: 800; margin-bottom: 6px; }
+.about-feature-card p  { font-size: 0.78rem; color: var(--text-muted); line-height: 1.5; }
+
+.about-steps {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  text-align: left;
+  margin-top: 16px;
+}
+
+.about-step {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+}
+
+.about-step-num {
+  flex-shrink: 0;
+  width: 32px;
+  height: 32px;
+  background: var(--accent-blue);
+  color: #fff;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 900;
+  font-size: 0.9rem;
+}
+
+.about-step p {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  margin: 4px 0 0;
+}
+
+.about-creator {
+  display: flex;
+  align-items: flex-start;
+  gap: 18px;
+  padding: 22px;
+}
+
+.about-creator-avatar {
+  font-size: 3.5rem;
+  flex-shrink: 0;
+}
+
+.about-creator-name { font-weight: 900; font-size: 1.1rem; }
+.about-creator-role { color: var(--accent-blue); font-size: 0.82rem; font-weight: 700; margin: 4px 0 10px; }
+.about-creator-bio  { font-size: 0.85rem; color: var(--text-muted); line-height: 1.6; }
+
+.about-stats-row {
+  display: flex;
+  justify-content: space-around;
+  background: var(--bg-card);
+  border: 1.5px solid var(--border);
+  border-radius: 20px;
+  padding: 20px;
+}
+
+.about-stat-val {
+  font-size: 2rem;
+  font-weight: 900;
+  background: linear-gradient(135deg, var(--accent-green), var(--accent-blue));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.about-stat-lab { font-size: 0.75rem; color: var(--text-muted); font-weight: 700; }
+.about-stat     { text-align: center; }
+
+.about-cta {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+
+/* -- Responsive: Mobile Optimisation ---------------------- */
+@media (max-width: 600px) {
+  /* About page */
+  .about-features-grid { grid-template-columns: repeat(2, 1fr); }
+  .about-title          { font-size: 1.8rem; }
+  .about-creator        { flex-direction: column; align-items: center; text-align: center; }
+  .about-step           { align-items: flex-start; }
+
+  /* Wider tap targets for all buttons */
+  .btn, .nav-item, .stat-pill, .icon-btn, .profile-menu-item {
+    min-height: 44px;
+  }
+
+  /* Lesson cards single column */
+  .lesson-grid, .course-units-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  /* Topbar stat pills: compact */
+  .topbar-stats .stat-pill { padding: 4px 7px; gap: 3px; }
+  .topbar-stats .stat-pill span:last-child { font-size: 0.78rem; }
+
+  /* Playground fullscreen hint */
+  #sandbox-editor, .sandbox-editor {
+    min-height: 50vh;
+  }
+
+  /* Notifications & modals: full-width on small screen */
+  .notification-dropdown { width: 92vw; right: -10px; }
+  .modal-box { width: 92vw; max-width: 92vw; }
+
+  /* Profile menu: open upward from full width */
+  .profile-menu {
+    width: 90vw;
+    left: 50%;
+    transform: translateX(-50%);
+    bottom: calc(100% + 8px);
+  }
+  .profile-menu.open { animation: slideUpFade 0.18s ease forwards; }
+}
+
+@media (max-width: 380px) {
+  .about-features-grid { grid-template-columns: 1fr; }
+  .about-stats-row { flex-wrap: wrap; gap: 12px; }
+}

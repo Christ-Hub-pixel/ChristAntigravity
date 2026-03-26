@@ -50,6 +50,13 @@ function renderAuth() {
             ${t('auth_btn')} →
           </button>
         </form>
+        <div class="auth-divider"><span>ou</span></div>
+        <button class="btn btn-secondary btn-full" onclick="loginAsGuest()">
+          👻 Mode Invité (sans compte)
+        </button>
+        <button class="btn btn-ghost btn-sm auth-about-link" onclick="navigate('#about')">
+          ℹ️ À propos de CodeLingo
+        </button>
       </div>
     </div>
   `;

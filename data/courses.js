@@ -977,6 +977,178 @@ const COURSES = {
         ]
       }
     ]
+  },
+
+  sql: {
+    id: 'sql',
+    name: 'SQL',
+    icon: '🗄️',
+    color: '#e07b39',
+    accent: '#f5cba7',
+    description: 'Maîtrisez les bases de données avec SQL',
+    units: [
+      {
+        id: 'sql-basics',
+        title: 'Requêtes de base',
+        icon: '🔍',
+        color: '#e07b39',
+        xpReward: 20,
+        lessons: [
+          {
+            id: 'sql-select',
+            title: 'Sélectionner des données (SELECT)',
+            icon: '📋',
+            xpReward: 10,
+            content: `
+              <p>SQL (Structured Query Language) est le langage pour communiquer avec des bases de données.</p>
+              <h3>La requête SELECT</h3>
+              <p>Elle permet de <strong>lire</strong> des données dans une table.</p>
+              <pre><code>SELECT * FROM utilisateurs;</code></pre>
+              <p>Le <code>*</code> signifie "toutes les colonnes". On peut aussi préciser :</p>
+              <pre><code>SELECT nom, age FROM utilisateurs;</code></pre>
+              [[TRY:SELECT * FROM utilisateurs;]]
+            `,
+            exercises: [
+              {
+                type: 'mcq',
+                question: 'Quelle requête sélectionne TOUTES les colonnes de la table "produits" ?',
+                options: ['GET * FROM produits', 'SELECT ALL produits', 'SELECT * FROM produits', 'FETCH produits'],
+                correct: 2,
+                explanation: 'SELECT * FROM table est la syntaxe pour récupérer toutes les colonnes.'
+              },
+              {
+                type: 'fill',
+                question: 'Complétez pour sélectionner les colonnes "nom" et "prix" de la table "articles" :',
+                code: '___ nom, prix FROM articles;',
+                answer: 'SELECT',
+                hint: 'Le mot-clé pour lire des données en SQL',
+                explanation: 'SELECT est le mot-clé fondamental pour récupérer des données en SQL.'
+              },
+              {
+                type: 'output',
+                question: 'Que retourne cette requête ?\n\nSELECT nom FROM clients WHERE id = 1;',
+                options: ['Toute la table clients', 'Le nom du client avec id=1', 'Tous les ids', 'Une erreur'],
+                correct: 1,
+                explanation: 'SELECT nom ... WHERE id = 1 filtre et retourne uniquement le champ "nom" du client ayant id=1.'
+              }
+            ]
+          },
+          {
+            id: 'sql-where',
+            title: 'Filtrer avec WHERE',
+            icon: '🔎',
+            xpReward: 10,
+            content: `
+              <h3>La clause WHERE</h3>
+              <p>WHERE filtre les résultats selon une condition.</p>
+              <pre><code>SELECT * FROM produits WHERE prix > 50;</code></pre>
+              <h3>Opérateurs courants</h3>
+              <ul>
+                <li><code>=</code> égal à</li>
+                <li><code>></code> <code><</code> supérieur/inférieur</li>
+                <li><code>LIKE '%jean%'</code> contient "jean"</li>
+                <li><code>AND</code> / <code>OR</code> combiner conditions</li>
+              </ul>
+            `,
+            exercises: [
+              {
+                type: 'mcq',
+                question: 'Quelle clause permet de filtrer les résultats d\'une requête SQL ?',
+                options: ['FILTER', 'WHERE', 'HAVING', 'LIMIT'],
+                correct: 1,
+                explanation: 'WHERE est utilisé pour filtrer les enregistrements selon une condition.'
+              },
+              {
+                type: 'fill',
+                question: 'Sélectionnez les produits dont le prix est supérieur à 100 :',
+                code: 'SELECT * FROM produits ___ prix > 100;',
+                answer: 'WHERE',
+                hint: 'Le mot-clé SQL pour appliquer une condition de filtrage',
+                explanation: 'WHERE suit immédiatement le nom de la table et précède la condition.'
+              }
+            ]
+          }
+        ]
+      },
+      {
+        id: 'sql-advanced',
+        title: 'Modifier & Combiner',
+        icon: '⚙️',
+        color: '#c0392b',
+        xpReward: 30,
+        lessons: [
+          {
+            id: 'sql-crud',
+            title: 'Insérer, Modifier, Supprimer',
+            icon: '✏️',
+            xpReward: 15,
+            content: `
+              <h3>INSERT — Ajouter des données</h3>
+              <pre><code>INSERT INTO clients (nom, email)
+VALUES ('Alice', 'alice@mail.com');</code></pre>
+              <h3>UPDATE — Modifier</h3>
+              <pre><code>UPDATE clients SET email = 'new@mail.com'
+WHERE id = 1;</code></pre>
+              <h3>DELETE — Supprimer</h3>
+              <pre><code>DELETE FROM clients WHERE id = 1;</code></pre>
+              <p>⚠️ Toujours utiliser <strong>WHERE</strong> avec UPDATE et DELETE !</p>
+            `,
+            exercises: [
+              {
+                type: 'mcq',
+                question: 'Quel mot-clé SQL est utilisé pour ajouter une nouvelle ligne dans une table ?',
+                options: ['ADD', 'INSERT INTO', 'CREATE', 'APPEND'],
+                correct: 1,
+                explanation: 'INSERT INTO suivi du nom de la table et des valeurs permet d\'ajouter une ligne.'
+              },
+              {
+                type: 'fill',
+                question: 'Modifiez le nom du client ayant id=5 :',
+                code: '___ clients SET nom = "Bob" WHERE id = 5;',
+                answer: 'UPDATE',
+                hint: 'Le mot-clé pour modifier des données existantes',
+                explanation: 'UPDATE permet de modifier des enregistrements existants. Toujours spécifier WHERE !'
+              }
+            ]
+          },
+          {
+            id: 'sql-join',
+            title: 'Joindre des tables (JOIN)',
+            icon: '🔗',
+            xpReward: 15,
+            content: `
+              <h3>JOIN — Combiner des tables</h3>
+              <p>Un <strong>JOIN</strong> relie deux tables par une colonne commune.</p>
+              <pre><code>SELECT commandes.id, clients.nom
+FROM commandes
+INNER JOIN clients ON commandes.client_id = clients.id;</code></pre>
+              <h3>Types de JOIN</h3>
+              <ul>
+                <li><strong>INNER JOIN</strong> — lignes communes aux deux tables</li>
+                <li><strong>LEFT JOIN</strong> — toutes les lignes de gauche + correspondances</li>
+                <li><strong>RIGHT JOIN</strong> — toutes les lignes de droite + correspondances</li>
+              </ul>
+            `,
+            exercises: [
+              {
+                type: 'mcq',
+                question: 'Quel type de JOIN retourne UNIQUEMENT les enregistrements ayant une correspondance dans les deux tables ?',
+                options: ['LEFT JOIN', 'RIGHT JOIN', 'INNER JOIN', 'FULL JOIN'],
+                correct: 2,
+                explanation: 'INNER JOIN ne retourne que les lignes qui ont une correspondance dans les deux tables.'
+              },
+              {
+                type: 'mcq',
+                question: 'Quelle clause définit la condition de liaison d\'un JOIN ?',
+                options: ['WHERE', 'ON', 'MATCH', 'LINK'],
+                correct: 1,
+                explanation: 'ON précise la colonne de liaison : JOIN table ON table1.col = table2.col'
+              }
+            ]
+          }
+        ]
+      }
+    ]
   }
 };
 

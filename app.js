@@ -247,6 +247,7 @@ window.routes = {
   '#playground':  () => renderSandbox(),
   '#reference':   () => renderReference(),
   '#lesson':      () => renderLessonRoute(),
+  '#about':       () => renderAbout(),
 };
 
 function navigate(hash) {
@@ -256,8 +257,8 @@ function navigate(hash) {
 function handleRoute() {
   let hash = window.location.hash || '#home';
   
-  // Auth Guard
-  if (!AppState.isLoggedIn && hash !== '#auth') {
+  // Allow about page without login
+  if (!AppState.isLoggedIn && hash !== '#auth' && hash !== '#about') {
     navigate('#auth');
     return;
   }
@@ -277,17 +278,15 @@ function handleRoute() {
   setTimeout(() => {
     main.classList.remove('page-exit');
     
-    // Inject the avatar loading screen
     const avatar = AppState.avatar || '🧑‍💻';
     main.innerHTML = `
-      <div class="splash-loading" style="height: 60vh;">
-        <div class="splash-logo" style="font-size: 5rem; line-height: 1;">${avatar}</div>
+      <div class="splash-loading splash-loading--mini">
+        <div class="splash-logo">${avatar}</div>
         <div class="splash-text">Chargement...</div>
       </div>
     `;
     main.classList.add('page-enter');
     
-    // Wait a brief moment to show the gamified loader, then render the actual route
     setTimeout(() => {
       main.classList.remove('page-enter');
       const render = window.routes[hash] || window.routes['#home'];
@@ -297,6 +296,37 @@ function handleRoute() {
     }, 350);
   }, 150);
 }
+
+// ── Guest / Demo Mode ──────────────────────────────────────
+function loginAsGuest() {
+  AppState.isLoggedIn = true;
+  AppState.username   = 'Invité';
+  AppState.avatar     = '👻';
+  AppState.isGuest    = true; // flag for UI
+  saveState();
+  translateStaticUI();
+  document.getElementById('app-topbar').style.display = 'flex';
+  document.getElementById('app-nav').style.display    = 'flex';
+  document.getElementById('app-main').style.paddingBottom = '';
+  navigate('#home');
+}
+window.loginAsGuest = loginAsGuest;
+
+// ── Auto-Logout After 30 min Inactivity ───────────────────
+let _inactivityTimer;
+function resetInactivityTimer() {
+  clearTimeout(_inactivityTimer);
+  _inactivityTimer = setTimeout(() => {
+    if (AppState.isLoggedIn) {
+      addNotification({ icon: '⏰', title: 'Session expirée', message: 'Tu as été déconnecté après 30 minutes d\'inactivité.' });
+      logoutUser && logoutUser(); // only if auth.js loaded
+    }
+  }, 30 * 60 * 1000); // 30 minutes
+}
+['click','keydown','touchstart','mousemove'].forEach(ev =>
+  document.addEventListener(ev, resetInactivityTimer, { passive: true })
+);
+resetInactivityTimer();
 
 window.navigate = navigate;
 window.handleRoute = handleRoute;
