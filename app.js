@@ -620,6 +620,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
 function setupNav() {
   document.querySelectorAll('.nav-item').forEach(item => {
-    item.addEventListener('click', () => navigate(item.dataset.route));
+    if (!item.classList.contains('nav-profile-wrapper')) {
+      item.addEventListener('click', () => navigate(item.dataset.route));
+    }
   });
 }
