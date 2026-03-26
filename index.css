@@ -2838,3 +2838,14 @@ h1, .section-title, .duo-header-title {
 .ref-search-wrap { flex-grow: 1; max-width: 400px; }
 .ref-search { width: 100%; padding: 10px 15px; border-radius: 10px; border: 2.5px solid var(--border); background: var(--bg-card); color: var(--text-primary); outline: none; transition: border-color 0.2s; }
 .ref-search:focus { border-color: var(--accent-blue); }
+
+/* --- App-like Performance Optimizations --- */
+* { -webkit-tap-highlight-color: transparent; }
+main { contain: content; will-change: opacity, transform; }
+.nav-item { cursor: pointer; user-select: none; }
+.splash-loading { contain: strict; }
+.page-enter { animation: slideIn 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+@keyframes slideIn { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+
+.btn:active, .nav-item:active, .path-node:active { transform: scale(0.95); transition: transform 0.1s; }
+@media (display-mode: standalone) { body { padding-top: env(safe-area-inset-top); padding-bottom: env(safe-area-inset-bottom); } }
