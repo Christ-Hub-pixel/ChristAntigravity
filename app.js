@@ -386,8 +386,16 @@ function translateStaticUI() {
   if (flag && lang) flag.textContent = lang.flag;
   if (short && lang) short.textContent = lang.short;
 
-  const m = id => { const el = document.getElementById(id); if (el) el.textContent = t(id.replace('nav-lbl-', 'nav_')); };
-  m('nav-lbl-home'); m('nav-lbl-courses'); m('nav-lbl-rank'); m('nav-lbl-profile');
+  const m = id => { 
+    const el = document.getElementById(id); 
+    if (el) el.textContent = t(id.replace('nav-lbl-', 'nav_')); 
+  };
+  m('nav-lbl-home'); 
+  m('nav-lbl-courses'); 
+  m('nav-lbl-rank'); 
+  m('nav-lbl-profile');
+  m('nav-lbl-playground');
+  m('nav-lbl-reference');
 }
 
 function cycleLang() {

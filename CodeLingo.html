@@ -1,133 +1,178 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="light">
+<html lang="fr" data-theme="dark">
 
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-    <title>CodeLingo — Learn to Code while having fun!</title>
-    <meta name="description"
-        content="Master Python and JavaScript gamification-style. Earn XP, unlock badges, and build real skills — one lesson at a time." />
-
-    <!-- Security Headers (Expert level) -->
-    <meta http-equiv="Content-Security-Policy" 
-          content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self';" />
-    <meta http-equiv="X-Content-Type-Options" content="nosniff" />
-    <meta name="referrer" content="no-referrer-when-downgrade" />
-
-  <!-- Fonts -->
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>CodeLingo — Apprendre à coder !</title>
+  
+  <meta name="description" content="Apprenez à coder gratuitement avec CodeLingo." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet" />
 
-  <!-- Styles -->
   <link rel="stylesheet" href="index.css" />
-
-  <!-- Favicon via emoji -->
   <link rel="icon" href="assets/icon.png" type="image/png" />
   <link rel="manifest" href="manifest.json" />
+
+  <meta name="theme-color" content="#1cb0f6" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
 </head>
 
 <body>
+  <!-- Offline Indicator -->
+  <div id="offline-banner" class="offline-banner">
+    <span>📡</span> <span id="offline-text">Mode hors-ligne activé</span>
+  </div>
+
+  <!-- Custom Modal System -->
+  <div id="modal-overlay" class="modal-overlay">
+    <div id="modal-card" class="modal-card">
+      <div id="modal-icon" class="modal-icon">⚠️</div>
+      <div id="modal-title" class="modal-title">Attention</div>
+      <div id="modal-message" class="modal-message">Êtes-vous sûr ?</div>
+      <div class="modal-actions">
+        <button id="modal-cancel-btn" class="modal-btn modal-btn-cancel">Annuler</button>
+        <button id="modal-confirm-btn" class="modal-btn modal-btn-confirm">Confirmer</button>
+      </div>
+    </div>
+  </div>
 
   <div id="app-wrapper">
 
-    <!-- Top Navbar -->
+    <!-- Top Navbar (Mobile) -->
     <header id="app-topbar">
       <div class="logo">
-        <img src="assets/icon.png" alt="CodeLingo Icon" style="height: 32px; border-radius: 6px; margin-right: 8px;">
+        <img src="assets/icon.png" alt="CodeLingo Icon" class="logo-img">
         <span>CodeLingo</span>
       </div>
       <div class="topbar-stats">
-        <div class="stat-pill hearts" title="Vies (Cœurs)">
-          <span class="stat-icon">❤️</span>
+        <div class="stat-item" title="Vies">
+          <span class="stat-icon icon-red">❤️</span>
           <span id="topbar-hearts">5</span>
         </div>
-        <div class="stat-pill streak">
+        <div class="stat-pill streak" title="Série 🔥">
           <span class="stat-icon">🔥</span>
           <span id="topbar-streak">1</span>
         </div>
-        <div class="stat-pill gems" title="Gemmes">
+        <div class="stat-pill gems" title="Gemmes 💎">
           <span class="stat-icon">💎</span>
           <span id="topbar-gems">500</span>
         </div>
-        <div class="stat-pill xp">
+        <div class="stat-pill xp" title="XP ⚡">
           <span class="stat-icon">⚡</span>
           <span id="topbar-xp">0</span>
         </div>
+        <div class="stat-item notification-bell-wrapper" onclick="toggleNotifications()" title="Notifications">
+          <span class="stat-icon topbar-stat-btn">🔔</span>
+          <span id="notification-badge" class="notification-badge hidden"></span>
+          <div id="notification-dropdown" class="notification-dropdown hidden">
+            <div class="notif-header">Notifications</div>
+            <div id="notif-list" class="notif-list">
+              <div class="notif-empty">Aucune nouvelle notification</div>
+            </div>
+          </div>
+        </div>
         <div class="stat-item" onclick="toggleSettings()" title="Paramètres">
-          <span class="stat-icon" style="font-size:1.2rem;">⚙️</span>
+          <span class="stat-icon topbar-stat-btn">⚙️</span>
         </div>
       </div>
     </header>
 
-    <!-- Main Content Area -->
+    <!-- Main -->
     <main id="app-main">
-      <!-- Loading splash -->
       <div class="splash-loading">
-        <div class="splash-logo" style="font-size: 5rem; line-height: 1;">🧑‍💻</div>
+        <div class="splash-logo">🚀</div>
         <div class="splash-text">Loading CodeLingo…</div>
-        <div class="splash-sub">Apprenez à coder en vous amusant !</div>
       </div>
     </main>
 
-    <!-- Bottom Navigation -->
+    <!-- Navigation -->
     <nav id="app-nav">
+      <div class="sidebar-top-section">
+        <div class="stat-pill hearts"><span class="stat-icon">❤️</span><span id="sidebar-hearts">5</span></div>
+        <div class="stat-pill streak"><span class="stat-icon">🔥</span><span id="sidebar-streak">1</span></div>
+        <div class="stat-pill gems"><span class="stat-icon">💎</span><span id="sidebar-gems">500</span></div>
+        <div class="stat-pill xp"><span class="stat-icon">⚡</span><span id="sidebar-xp">0</span></div>
+      </div>
+
       <div class="nav-item" data-route="#home" id="nav-home">
-        <span class="nav-icon">🏠</span>
-        <span class="nav-label" id="nav-lbl-home">Home</span>
+        <span class="nav-icon">🏠</span><span class="nav-label">Home</span>
       </div>
       <div class="nav-item" data-route="#courses" id="nav-courses">
-        <span class="nav-icon">📚</span>
-        <span class="nav-label" id="nav-lbl-courses">Courses</span>
+        <span class="nav-icon">📚</span><span class="nav-label">Courses</span>
       </div>
       <div class="nav-item" data-route="#leaderboard" id="nav-leaderboard">
-        <span class="nav-icon">🏆</span>
-        <span class="nav-label" id="nav-lbl-rank">Rank</span>
+        <span class="nav-icon">🏆</span><span class="nav-label">Rank</span>
       </div>
-      <div class="nav-item" data-route="#profile" id="nav-profile">
-        <span class="nav-icon">👤</span>
-        <span class="nav-label" id="nav-lbl-profile">Profile</span>
+      <div class="nav-item" data-route="#playground" id="nav-playground">
+        <span class="nav-icon">🧪</span><span class="nav-label">Playground</span>
+      </div>
+      <div class="nav-item" data-route="#reference" id="nav-reference">
+        <span class="nav-icon">📖</span><span class="nav-label">Reference</span>
+      </div>
+
+      <div class="nav-item nav-profile-wrapper" id="nav-profile" onclick="toggleProfileMenu()">
+        <span class="nav-icon" id="nav-profile-avatar">👤</span><span class="nav-label">Profil</span>
+        <div class="profile-menu" id="profile-menu">
+          <div class="profile-menu-user">
+            <span class="profile-menu-avatar" id="profile-menu-avatar">👤</span>
+            <span class="profile-menu-name" id="profile-menu-name">Chargement...</span>
+          </div>
+          <button class="profile-menu-item" onclick="event.stopPropagation(); navigate('#profile'); closeProfileMenu()">
+            <span>👤</span> Mon Profil
+          </button>
+          <button class="profile-menu-item" onclick="event.stopPropagation(); openLangModal(); closeProfileMenu()">
+            <span>🌐</span> Langue
+          </button>
+          <button class="profile-menu-item" onclick="event.stopPropagation(); cycleTheme(); closeProfileMenu()">
+            <span>🎨</span> Thème
+          </button>
+          <hr class="profile-menu-divider">
+          <button class="profile-menu-item profile-menu-logout" onclick="event.stopPropagation(); logoutUser()">
+            <span>🚪</span> Déconnexion
+          </button>
+        </div>
+      </div>
+      
+      <div class="sidebar-bottom-section">
+        <button class="icon-btn" onclick="cycleLang()"><span id="lang-flag">🇫🇷</span></button>
+        <button class="icon-btn" onclick="cycleTheme()"><span id="theme-icon">🌙</span></button>
       </div>
     </nav>
-
   </div>
 
-  <!-- AI Tutor Interface -->
-  <button class="ai-fab" onclick="toggleAIChat()" title="Lingo AI Tutor">🤖</button>
+  <!-- AI Tutor -->
+  <button class="ai-fab" onclick="toggleAIChat()">🤖</button>
   <div id="ai-chat-container" class="ai-chat-container" style="display:none;"></div>
-
-  <!-- Smart Quick Settings Panel -->
   <div id="settings-panel-container" class="settings-panel-container" style="display:none;"></div>
 
-  <!-- Data Layer -->
-  <script src="data/i18n.js"></script>
-  <script src="data/gamification.js"></script>
-  <script src="data/courses.js"></script>
+  <!-- Scripts -->
+  <script src="./data/gamification.js"></script>
+  <script src="./data/i18n.js"></script>
+  <script src="./data/courses.js"></script>
+  <script src="./data/reference.js"></script>
+  <script src="./components/auth.js"></script>
+  <script src="./components/home.js"></script>
+  <script src="./components/course.js"></script>
+  <script src="./components/lesson.js"></script>
+  <script src="./components/leaderboard.js"></script>
+  <script src="./components/profile.js"></script>
+  <script src="./components/ai.js"></script>
+  <script src="./components/settings.js"></script>
+  <script src="./components/sandbox.js"></script>
+  <script src="./components/reference.js"></script>
+  <script src="./components/tutorial.js"></script>
+  <script src="./components/about.js"></script>
+  <script src="./app.js" defer></script>
 
-  <!-- App Core -->
-  <script src="app.js"></script>
-
-  <!-- Components -->
-  <script src="components/auth.js"></script>
-  <script src="components/home.js"></script>
-  <script src="components/course.js"></script>
-  <script src="components/lesson.js"></script>
-  <script src="components/leaderboard.js"></script>
-  <script src="components/profile.js"></script>
-  <script src="components/ai.js"></script>
-  <script src="components/settings.js"></script>
-
-  <!-- PWA Service Worker Registration -->
   <script>
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
-        navigator.serviceWorker.register('sw.js')
-          .then(reg => console.log('SW registered!', reg))
-          .catch(err => console.log('SW reg error:', err));
+        navigator.serviceWorker.register('sw.js').catch(console.warn);
       });
     }
   </script>
-
 </body>
-
 </html>

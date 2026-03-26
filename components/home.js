@@ -15,8 +15,13 @@ function renderHome() {
   for (let i = 0; i < course.units.length; i++) {
     const unit = course.units[i];
     const unitDone = unit.lessons.filter(l => state.completedLessons.includes(l.id)).length;
-    if (unitDone < unit.lessons.length) { activeUnitIdx = i; break; }
-    activeUnitIdx = i;
+    if (unitDone < unit.lessons.length) { 
+      activeUnitIdx = i; 
+      break; 
+    }
+    if (i === course.units.length - 1) {
+      activeUnitIdx = i; // Stay on last unit if all done
+    }
   }
 
   const activeUnit = course.units[activeUnitIdx];
@@ -221,6 +226,21 @@ function updateTopbar() {
     const el = document.getElementById(id);
     if (el) el.textContent = val;
   }
+
+  // Also update avatars
+  const avatarElements = [
+    'nav-profile-avatar',
+    'profile-menu-avatar',
+    'sidebar-avatar'
+  ];
+  avatarElements.forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.textContent = AppState.avatar || '👤';
+  });
+
+  // Update username in profile menu
+  const menuName = document.getElementById('profile-menu-name');
+  if (menuName) menuName.textContent = AppState.username || 'Utilisateur';
 }
 
 window.renderHome    = renderHome;
