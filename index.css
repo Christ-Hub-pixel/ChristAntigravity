@@ -2865,3 +2865,15 @@ main { contain: content; will-change: opacity, transform; }
 .stat-v2-icon { font-size: 1.8rem; margin-bottom: 5px; }
 .stat-v2-val { font-size: 1.2rem; font-weight: 900; }
 .stat-v2-lbl { font-size: 0.7rem; font-weight: 800; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.5px; }
+
+/* --- Profile Menu Fix --- */
+.profile-menu { position: absolute; bottom: 80px; left: 5px; background: var(--bg-card); border: 2.5px solid var(--border); border-radius: 16px; width: 220px; box-shadow: 0 10px 25px rgba(0,0,0,0.3); z-index: 10001; visibility: hidden; opacity: 0; transform: translateY(10px); transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1); pointer-events: none; padding: 10px; }
+.profile-menu.open { visibility: visible; opacity: 1; transform: translateY(0); pointer-events: auto; }
+.profile-menu-user { display: flex; align-items: center; gap: 12px; padding: 12px; margin-bottom: 8px; border-bottom: 1.5px solid var(--border); }
+.profile-menu-avatar { font-size: 1.8rem; }
+.profile-menu-name { font-weight: 900; font-size: 1rem; color: var(--text-primary); }
+.profile-menu-item { display: flex !important; align-items: center !important; gap: 15px !important; width: 100% !important; padding: 12px 15px !important; border: none !important; background: transparent !important; color: var(--text-secondary) !important; font-weight: 800 !important; font-family: inherit !important; font-size: 0.95rem !important; cursor: pointer !important; border-radius: 12px !important; transition: all 0.2s !important; text-align: left !important; white-space: nowrap !important; overflow: hidden !important; }
+.profile-menu-item:hover { background: rgba(0,0,0,0.1) !important; color: var(--accent-blue) !important; transform: translateX(5px); }
+.profile-menu-item span { font-size: 1.3rem; min-width: 24px; text-align: center; }
+.profile-menu-divider { border: none; border-top: 1.5px solid var(--border); margin: 8px 0; }
+.profile-menu-logout:hover { color: #ef4444 !important; background: rgba(239, 68, 68, 0.1) !important; }
