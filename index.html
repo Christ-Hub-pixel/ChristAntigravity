@@ -99,7 +99,7 @@
     <main id="app-main">
       <!-- Loading splash -->
       <div class="splash-loading">
-        <div class="splash-logo" style="font-size: 5rem; line-height: 1;">🚀</div>
+        <div class="splash-logo">🚀</div>
         <div class="splash-text">Loading CodeLingo…</div>
         <div class="splash-sub">Apprenez à coder en vous amusant !</div>
       </div>
@@ -148,9 +148,29 @@
         <span class="nav-label" id="nav-lbl-reference">Reference</span>
       </div>
 
-      <div class="nav-item" data-route="#profile" id="nav-profile">
-        <span class="nav-icon">👤</span>
-        <span class="nav-label" id="nav-lbl-profile">Profile</span>
+      <div class="nav-item nav-profile-wrapper" id="nav-profile" onclick="toggleProfileMenu()">
+        <span class="nav-icon" id="nav-profile-avatar">👤</span>
+        <span class="nav-label" id="nav-lbl-profile">Profil</span>
+        <!-- Profile dropdown -->
+        <div class="profile-menu" id="profile-menu">
+          <div class="profile-menu-user">
+            <span class="profile-menu-avatar" id="profile-menu-avatar">👤</span>
+            <span class="profile-menu-name" id="profile-menu-name">Utilisateur</span>
+          </div>
+          <button class="profile-menu-item" onclick="event.stopPropagation(); navigate('#profile'); closeProfileMenu()">
+            <span>👤</span> Mon Profil
+          </button>
+          <button class="profile-menu-item" onclick="event.stopPropagation(); openLangModal(); closeProfileMenu()">
+            <span>🌐</span> Changer la langue
+          </button>
+          <button class="profile-menu-item" onclick="event.stopPropagation(); cycleTheme(); closeProfileMenu()">
+            <span>🎨</span> Thème
+          </button>
+          <hr class="profile-menu-divider">
+          <button class="profile-menu-item profile-menu-logout" onclick="event.stopPropagation(); logoutUser()">
+            <span>🚪</span> Déconnexion
+          </button>
+        </div>
       </div>
 
       <div class="nav-item hidden" id="install-app-btn">
@@ -159,7 +179,7 @@
       </div>
 
       <!-- Quick Toggles (Desktop Sidebar) -->
-      <div class="sidebar-top-section" style="margin-top: auto; border-top: 2px solid var(--border); border-bottom: none; padding-top: 16px;">
+      <div class="sidebar-bottom-section">
         <button class="icon-btn" onclick="cycleLang()" title="Change Language">
           <span id="lang-flag">🇬🇧</span> <span id="lang-short">EN</span>
         </button>

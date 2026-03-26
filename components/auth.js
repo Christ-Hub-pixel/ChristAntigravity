@@ -224,14 +224,85 @@ function changeLangLive(langId) {
 // Backwards compat for old cycleLang button
 function cycleLang() { openLangModal(); }
 
-window.renderAuth        = renderAuth;
-window.handleAuthStep1   = handleAuthStep1;
-window.pickAvatar        = pickAvatar;
-window.renderLangPicker  = renderLangPicker;
-window.selectAuthLang    = selectAuthLang;
-window.finishAuth        = finishAuth;
-window.openLangModal     = openLangModal;
-window.closeLangModal    = closeLangModal;
-window.changeLangLive    = changeLangLive;
-window.cycleLang         = cycleLang;
-window.AVATARS           = AVATARS;
+// ── Profile Dropdown Menu ──────────────────────────────────
+function toggleProfileMenu() {
+  const menu = document.getElementById('profile-menu');
+  if (!menu) { navigate('#profile'); return; }
+
+  // Sync avatar/name into menu header
+  const avatarEl = document.getElementById('profile-menu-avatar');
+  const nameEl   = document.getElementById('profile-menu-name');
+  if (avatarEl) avatarEl.textContent = AppState.avatar || '👤';
+  if (nameEl)   nameEl.textContent   = AppState.username || 'Utilisateur';
+
+  // Also update the nav icon
+  const navIcon = document.getElementById('nav-profile-avatar');
+  if (navIcon) navIcon.textContent = AppState.avatar || '👤';
+
+  const isOpen = menu.classList.contains('open');
+  if (isOpen) {
+    closeProfileMenu();
+  } else {
+    menu.classList.add('open');
+    // Close on outside click
+    setTimeout(() => {
+      document.addEventListener('click', closeProfileMenuOutside, { once: true });
+    }, 0);
+  }
+}
+
+function closeProfileMenu() {
+  const menu = document.getElementById('profile-menu');
+  if (menu) menu.classList.remove('open');
+}
+
+function closeProfileMenuOutside(e) {
+  const wrapper = document.getElementById('nav-profile');
+  if (wrapper && !wrapper.contains(e.target)) closeProfileMenu();
+}
+
+// ── Logout ────────────────────────────────────────────────
+function logoutUser() {
+  showModal({
+    icon: '🚪',
+    title: 'Déconnexion',
+    message: 'Es-tu sûr de vouloir te déconnecter ?',
+    confirmText: 'Déconnexion',
+    cancelText: 'Annuler',
+    onConfirm: () => {
+      // Keep language & theme preferences
+      const lang  = AppState.lang;
+      const theme = AppState.theme;
+      // Reset to fresh state
+      const fresh = {
+        isLoggedIn: false, username: '', avatar: '🧑‍💻', password: '',
+        totalXP: 0, streakDays: 0, lastActiveDate: '', completedLessons: [],
+        hearts: 5, maxHearts: 5, gems: 500, currentCourse: 'python',
+        notifications: [], dailyGoal: 20, dailyXP: 0,
+        lang, theme,
+      };
+      Object.assign(AppState, fresh);
+      saveState();
+
+      closeProfileMenu();
+      document.getElementById('app-topbar').style.display = 'none';
+      document.getElementById('app-nav').style.display = 'none';
+      renderAuth();
+    }
+  });
+}
+
+window.renderAuth            = renderAuth;
+window.handleAuthStep1       = handleAuthStep1;
+window.pickAvatar            = pickAvatar;
+window.renderLangPicker      = renderLangPicker;
+window.selectAuthLang        = selectAuthLang;
+window.finishAuth            = finishAuth;
+window.openLangModal         = openLangModal;
+window.closeLangModal        = closeLangModal;
+window.changeLangLive        = changeLangLive;
+window.cycleLang             = cycleLang;
+window.AVATARS               = AVATARS;
+window.logoutUser            = logoutUser;
+window.toggleProfileMenu     = toggleProfileMenu;
+window.closeProfileMenu      = closeProfileMenu;

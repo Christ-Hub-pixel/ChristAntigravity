@@ -2165,3 +2165,117 @@ input:checked + .slider:before { transform: translateX(20px); }
 
 .install-show { display: flex !important; animation: bounceIn 0.5s ease; }
 @keyframes bounceIn { from { transform: scale(0.3); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+
+/* -- Splash Logo ------------------------------------------- */
+.splash-logo { font-size: 5rem; line-height: 1; }
+
+/* -- Sidebar Bottom Section ------------------------------- */
+.sidebar-bottom-section {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  margin-top: auto;
+  border-top: 2px solid var(--border);
+  padding-top: 16px;
+}
+
+/* -- Profile Nav Wrapper & Dropdown ----------------------- */
+.nav-profile-wrapper { position: relative; }
+
+.profile-menu {
+  display: none;
+  flex-direction: column;
+  position: absolute;
+  bottom: calc(100% + 8px);
+  left: -12px;
+  min-width: 210px;
+  background: var(--bg-card);
+  border: 1.5px solid var(--border);
+  border-radius: 16px;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.4), 0 4px 16px rgba(0,0,0,0.2);
+  overflow: hidden;
+  z-index: 200;
+  transform: translateY(6px) scale(0.97);
+  opacity: 0;
+  transition: opacity 0.18s ease, transform 0.18s ease;
+  pointer-events: none;
+}
+
+.profile-menu.open {
+  display: flex;
+  transform: translateY(0) scale(1);
+  opacity: 1;
+  pointer-events: all;
+  animation: slideUpFade 0.18s ease forwards;
+}
+
+@keyframes slideUpFade {
+  from { transform: translateY(8px) scale(0.97); opacity: 0; }
+  to   { transform: translateY(0) scale(1);      opacity: 1; }
+}
+
+.profile-menu-user {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 16px;
+  background: var(--bg-hover);
+  border-bottom: 1px solid var(--border);
+}
+
+.profile-menu-avatar {
+  font-size: 1.8rem;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.profile-menu-name {
+  font-weight: 800;
+  color: var(--text-main);
+  font-size: 0.95rem;
+}
+
+.profile-menu-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 11px 16px;
+  background: none;
+  border: none;
+  color: var(--text-main);
+  font-weight: 600;
+  font-size: 0.9rem;
+  cursor: pointer;
+  text-align: left;
+  transition: background 0.15s ease;
+}
+
+.profile-menu-item:hover { background: var(--bg-hover); }
+.profile-menu-item span  { font-size: 1.1rem; }
+
+.profile-menu-divider {
+  border: none;
+  border-top: 1.5px solid var(--border);
+  margin: 4px 0;
+}
+
+.profile-menu-logout {
+  color: #ff6b6b;
+  font-weight: 700;
+}
+
+.profile-menu-logout:hover { background: rgba(255,107,107,0.1); }
+
+/* On desktop (sidebar), slide out from left */
+@media (min-width: 768px) {
+  .profile-menu {
+    bottom: auto;
+    top: -8px;
+    left: calc(100% + 12px);
+    min-width: 220px;
+  }
+}
