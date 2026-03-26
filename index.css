@@ -2151,3 +2151,15 @@ input:checked + .slider:before { transform: translateX(20px); }
 .goal-check {
   font-size: 1.2rem;
 }
+/* -- Mobile PWA Standalone Mode -------------------------- */
+@media (display-mode: standalone) {
+  ::-webkit-scrollbar { display: none; }
+  body { 
+    overscroll-behavior-y: contain; 
+    -webkit-tap-highlight-color: transparent; 
+    user-select: none;
+  }
+}
+
+.install-show { display: flex !important; animation: bounceIn 0.5s ease; }
+@keyframes bounceIn { from { transform: scale(0.3); opacity: 0; } to { transform: scale(1); opacity: 1; } }

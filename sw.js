@@ -1,4 +1,4 @@
-const CACHE_NAME = 'codelingo-v1.2.0';
+const CACHE_NAME = 'codelingo-v1.3.0';
 const ASSETS = [
   './',
   './index.html',
@@ -7,6 +7,7 @@ const ASSETS = [
   './assets/icon.png',
   './data/i18n.js',
   './data/courses.js',
+  './data/gamification.js',
   './data/reference.js',
   './components/auth.js',
   './components/home.js',
