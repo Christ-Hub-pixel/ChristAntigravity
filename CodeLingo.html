@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>CodeLingo — Learn to Code while having fun!</title>
+    <meta name="description"
+        content="Master Python and JavaScript gamification-style. Earn XP, unlock badges, and build real skills — one lesson at a time." />
+
+    <!-- Security Headers (Expert level) -->
+    <meta http-equiv="Content-Security-Policy" 
+          content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self';" />
+    <meta http-equiv="X-Content-Type-Options" content="nosniff" />
+    <meta name="referrer" content="no-referrer-when-downgrade" />
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet" />
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="index.css" />
+
+  <!-- Favicon via emoji -->
+  <link rel="icon" href="assets/icon.png" type="image/png" />
+  <link rel="manifest" href="manifest.json" />
+</head>
+
+<body>
+
+  <div id="app-wrapper">
+
+    <!-- Top Navbar -->
+    <header id="app-topbar">
+      <div class="logo">
+        <img src="assets/icon.png" alt="CodeLingo Icon" style="height: 32px; border-radius: 6px; margin-right: 8px;">
+        <span>CodeLingo</span>
+      </div>
+      <div class="topbar-stats">
+        <div class="stat-pill hearts" title="Vies (Cœurs)">
+          <span class="stat-icon">❤️</span>
+          <span id="topbar-hearts">5</span>
+        </div>
+        <div class="stat-pill streak">
+          <span class="stat-icon">🔥</span>
+          <span id="topbar-streak">1</span>
+        </div>
+        <div class="stat-pill gems" title="Gemmes">
+          <span class="stat-icon">💎</span>
+          <span id="topbar-gems">500</span>
+        </div>
+        <div class="stat-pill xp">
+          <span class="stat-icon">⚡</span>
+          <span id="topbar-xp">0</span>
+        </div>
+        <div class="stat-item" onclick="toggleSettings()" title="Paramètres">
+          <span class="stat-icon" style="font-size:1.2rem;">⚙️</span>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Content Area -->
+    <main id="app-main">
+      <!-- Loading splash -->
+      <div class="splash-loading">
+        <div class="splash-logo" style="font-size: 5rem; line-height: 1;">🧑‍💻</div>
+        <div class="splash-text">Loading CodeLingo…</div>
+        <div class="splash-sub">Apprenez à coder en vous amusant !</div>
+      </div>
+    </main>
+
+    <!-- Bottom Navigation -->
+    <nav id="app-nav">
+      <div class="nav-item" data-route="#home" id="nav-home">
+        <span class="nav-icon">🏠</span>
+        <span class="nav-label" id="nav-lbl-home">Home</span>
+      </div>
+      <div class="nav-item" data-route="#courses" id="nav-courses">
+        <span class="nav-icon">📚</span>
+        <span class="nav-label" id="nav-lbl-courses">Courses</span>
+      </div>
+      <div class="nav-item" data-route="#leaderboard" id="nav-leaderboard">
+        <span class="nav-icon">🏆</span>
+        <span class="nav-label" id="nav-lbl-rank">Rank</span>
+      </div>
+      <div class="nav-item" data-route="#profile" id="nav-profile">
+        <span class="nav-icon">👤</span>
+        <span class="nav-label" id="nav-lbl-profile">Profile</span>
+      </div>
+    </nav>
+
+  </div>
+
+  <!-- AI Tutor Interface -->
+  <button class="ai-fab" onclick="toggleAIChat()" title="Lingo AI Tutor">🤖</button>
+  <div id="ai-chat-container" class="ai-chat-container" style="display:none;"></div>
+
+  <!-- Smart Quick Settings Panel -->
+  <div id="settings-panel-container" class="settings-panel-container" style="display:none;"></div>
+
+  <!-- Data Layer -->
+  <script src="data/i18n.js"></script>
+  <script src="data/gamification.js"></script>
+  <script src="data/courses.js"></script>
+
+  <!-- App Core -->
+  <script src="app.js"></script>
+
+  <!-- Components -->
+  <script src="components/auth.js"></script>
+  <script src="components/home.js"></script>
+  <script src="components/course.js"></script>
+  <script src="components/lesson.js"></script>
+  <script src="components/leaderboard.js"></script>
+  <script src="components/profile.js"></script>
+  <script src="components/ai.js"></script>
+  <script src="components/settings.js"></script>
+
+  <!-- PWA Service Worker Registration -->
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('sw.js')
+          .then(reg => console.log('SW registered!', reg))
+          .catch(err => console.log('SW reg error:', err));
+      });
+    }
+  </script>
+
+</body>
+
+</html>
