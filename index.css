@@ -611,27 +611,35 @@ input { font-family: inherit; }
 /* Tooltip on current node */
 .path-node-tooltip {
   position: absolute;
-  top: calc(100% + 6px);
+  bottom: calc(100% + 12px); /* Position ABOVE the node */
   left: 50%;
   transform: translateX(-50%);
   white-space: nowrap;
   background: var(--accent-blue);
   color: #fff;
-  font-weight: 900; font-size: 0.78rem;
-  padding: 5px 14px;
-  border-radius: var(--radius-full);
+  font-weight: 900; 
+  font-size: 0.85rem;
+  padding: 8px 16px;
+  border-radius: 12px;
   box-shadow: 0 4px 0 var(--accent-blue-shadow);
   pointer-events: none;
-  margin-top: 32px;
   z-index: 10;
+  animation: duoBounce 2s infinite;
 }
+
 .path-node-tooltip::before {
   content: '';
   position: absolute;
-  bottom: 100%; left: 50%;
+  top: 100%; /* Point DOWN */
+  left: 50%;
   transform: translateX(-50%);
-  border: 6px solid transparent;
-  border-bottom-color: var(--accent-blue);
+  border: 8px solid transparent;
+  border-top-color: var(--accent-blue);
+}
+
+@keyframes duoBounce {
+  0%, 100% { transform: translate(-50%, 0); }
+  50% { transform: translate(-50%, -6px); }
 }
 
 /* SVG path lines */
@@ -2143,20 +2151,14 @@ input:checked + .slider:before { transform: translateX(20px); }
 }
 
 .goal-xp {
-  font-size: 0.8rem;
-  color: var(--text-dim);
-  font-weight: 700;
-}
 
-.goal-check {
-  font-size: 1.2rem;
-}
 /* -- Mobile PWA Standalone Mode -------------------------- */
 @media (display-mode: standalone) {
   ::-webkit-scrollbar { display: none; }
   body { 
     overscroll-behavior-y: contain; 
     -webkit-tap-highlight-color: transparent; 
+    -webkit-user-select: none;
     user-select: none;
   }
 }
